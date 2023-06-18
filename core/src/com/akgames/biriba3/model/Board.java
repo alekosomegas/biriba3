@@ -3,12 +3,18 @@ package com.akgames.biriba3.model;
 import java.util.List;
 
 /**
- * The Foo class is a silly example to illustrate documentation
- * comments.
+ * Responsible for creating the Deck
  */
 public class Board {
-    private List<Card> drawPile;
     private List<Card> discardPile;
     private List<Triti> trites;
+    private Deck deck;
 
+    public Board() {
+        deck = new Deck();
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
 }

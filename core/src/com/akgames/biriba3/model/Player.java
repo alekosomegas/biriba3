@@ -8,4 +8,6 @@ public class Player {
     private int score;
     private int penaltyPoints;
 
+    public Player(String name, boolean isAI, int teamNumber) {
+    }
 }

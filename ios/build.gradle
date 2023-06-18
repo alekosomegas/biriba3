@@ -16,4 +16,5 @@ robovm {
 	archs = "arm64"
 }
 
+
 eclipse.project.name = appName + "-ios"
