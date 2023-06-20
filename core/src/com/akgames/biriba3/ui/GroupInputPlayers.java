@@ -1,14 +1,10 @@
 package com.akgames.biriba3.ui;
 
-import com.akgames.biriba3.model.GameOptions;
+import com.akgames.biriba3.controller.GameOptions;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 public class GroupInputPlayers extends Group {
     InputPlayer p1;
@@ -47,5 +43,10 @@ public class GroupInputPlayers extends Group {
     }
     public Table getTable() {
         return table;
+    }
+
+    //Refactor: Use update method to update ui when any event fires
+    private void update() {
+
     }
 }

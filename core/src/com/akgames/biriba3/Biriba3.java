@@ -1,11 +1,12 @@
 package com.akgames.biriba3;
 
-import com.akgames.biriba3.model.GameLogic;
+import com.akgames.biriba3.controller.GameLogic;
+import com.akgames.biriba3.controller.GameOptions;
 import com.akgames.biriba3.view.GameScreen;
 import com.akgames.biriba3.view.MainMenuScreen;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class Biriba3 extends Game {
@@ -16,13 +17,15 @@ public class Biriba3 extends Game {
 	public Biriba3() {
 		// instantiates all the game components
 		// gameLogic -> Board -> Deck -> Cards
-		gameLogic = new GameLogic();
+		gameLogic = GameLogic.getInstance();
 	}
 	
 	@Override
 	public void create () {
+		GameOptions.SKIN =  new Skin(Gdx.files.internal("skins/default/skin/uiskin.json"));
 		mainMenuScreen = new MainMenuScreen(this);
 		gameScreen = new GameScreen(this);
+		gameLogic.setGameScreen(gameScreen);
 		setScreen(mainMenuScreen);
 	}
 
@@ -47,7 +50,15 @@ public class Biriba3 extends Game {
 		return gameScreen;
 	}
 
+	//TODO: no need
 	public GameLogic getGameLogic() {
 		return gameLogic;
+	}
+
+	//TODO: bug not dealing cards
+	public void createNewGame() {
+		gameLogic = GameLogic.createNewGame();
+		create();
+		setScreen(mainMenuScreen);
 	}
 }

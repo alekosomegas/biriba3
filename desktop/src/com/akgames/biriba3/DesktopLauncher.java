@@ -9,7 +9,7 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
-		config.setWindowedMode(1800, 1800);
+		config.setWindowedMode(2800, 1800);
 		config.setTitle("Biriba3");
 		new Lwjgl3Application(new Biriba3(), config);
 	}

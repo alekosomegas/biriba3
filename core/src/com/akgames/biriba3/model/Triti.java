@@ -1,5 +1,32 @@
 package com.akgames.biriba3.model;
 
+import com.akgames.biriba3.controller.GameLogic;
+import com.akgames.biriba3.controller.GameOptions;
+
+import java.util.List;
+
 public class Triti {
-    private int playerInt;
+    private int team;
+    List<Card> cards;
+
+    private Triti(List<Card> cards) {
+        this.cards = cards;
+        //TODO: should getTeam
+        this.team = GameLogic.getInstance().currentPlayerIndex;
+    }
+
+    public static Triti createTriti(List<Card> cards) {
+        if(cards.size() < 3) {
+            return null;
+        }
+        return new Triti(cards);
+    }
+
+    public List<Card> getCards() {
+        return cards;
+    }
+
+    public void addCard(Card card) {
+        cards.add(card);
+    }
 }

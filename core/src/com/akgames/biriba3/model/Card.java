@@ -38,4 +38,13 @@ public class Card {
     public boolean isShowFace() {
         return showFace;
     }
+    public Card turn() {
+        showFace = !showFace;
+        return this;
+    }
+
+    @Override
+    public String toString(){
+        return suit_symbol[suit]+verbose_rank[rank%13];
+    }
 }

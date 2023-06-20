@@ -1,21 +1,15 @@
 package com.akgames.biriba3.ui;
 
-import com.akgames.biriba3.model.GameOptions;
-import com.akgames.biriba3.view.MainMenuScreen;
+import com.akgames.biriba3.controller.GameOptions;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
-import javax.swing.text.TableView;
-import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -123,7 +117,6 @@ public class InputPlayer extends Actor implements PropertyChangeListener {
             nameField.setDisabled(true);
             aiCheckBox.setDisabled(true);
 
-
             greyInputs(true);
         }
     }
@@ -145,7 +138,6 @@ public class InputPlayer extends Actor implements PropertyChangeListener {
     }
 
 
-    //TODO: bug when click add p3 - add p4 - x p3 - add p4 appears as x
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         // if p3 is active and this is p4
@@ -158,8 +150,10 @@ public class InputPlayer extends Actor implements PropertyChangeListener {
                 addButton.setDisabled(false);
             } else {
                 greyInputs(true);
+                TextButton textButton =  (TextButton) addButton;
+                textButton.getLabel().setText("Add");
             }
-
         }
+        teamLabel.setText("Team " + gameOptions.getTeam(index));
     }
 }
