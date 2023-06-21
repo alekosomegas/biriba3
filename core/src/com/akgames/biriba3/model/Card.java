@@ -14,6 +14,9 @@ public class Card {
 
     private boolean showFace;
 
+    private boolean clickable;
+    private boolean selected;
+
     // value is between 0-51, -1 for joker
     public Card(int value) {
         this.value = value;
@@ -27,8 +30,10 @@ public class Card {
             this.rank = value % 13;
             this.imageUrl =
                     (verbose_rank[rank] + verbose_suit[suit] + ".png").toLowerCase();
-
         }
+
+        this.clickable = false;
+        this.selected = false;
     }
 
     public String getImageUrl() {
@@ -50,5 +55,21 @@ public class Card {
     @Override
     public String toString(){
         return suit_symbol[suit]+verbose_rank[rank%13];
+    }
+
+    public boolean isClickable() {
+        return clickable;
+    }
+
+    public void setClickable(boolean clickable) {
+        this.clickable = clickable;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

@@ -9,7 +9,7 @@ import com.akgames.biriba3.model.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.akgames.biriba3.controller.GameOptions.NUM_CARDS_PER_PLAYER;
+import static com.akgames.biriba3.controller.GameOptions.*;
 
 public class DealAction implements PlayerAction {
     private Board board;
@@ -35,13 +35,19 @@ public class DealAction implements PlayerAction {
             }
         }
 
+        List<Card> cards1 = new ArrayList<>(NUM_CARDS_BIRIBAKI_1), cards2 = new ArrayList<>(NUM_CARDS_BIRIBAKI_2);
+
+        for (int i=0; i < NUM_CARDS_BIRIBAKI_1; i++) {
+            cards1.add(deck.getTopCard());
+        }
+        for (int i=0; i < NUM_CARDS_BIRIBAKI_2; i++) {
+            cards2.add(deck.getTopCard());
+        }
+
+        board.createBiribakia(cards1, cards2);
+
         board.addToDiscardPile(deck.getTopCard().turn());
 
-        List<Card> test = new ArrayList<>();
-        test.add(deck.getTopCard().turn());
-        test.add(deck.getTopCard().turn());
-        test.add(deck.getTopCard().turn());
-        gameLogic.handleAction(new CreateTritiAction(), test);
     }
 
     @Override

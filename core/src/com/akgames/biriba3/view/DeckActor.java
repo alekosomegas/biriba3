@@ -25,7 +25,6 @@ public class DeckActor extends Actor {
     private GameLogic gameLogic;
     private Deck deck;
     private List<CardActor> cardActors;
-    private Sprite sprite;
     private TextureRegion cardImage;
     private float width, height;
 
@@ -35,7 +34,6 @@ public class DeckActor extends Actor {
         this.deck = deck;
         cardActors = new ArrayList<>();
 
-        //TODO: change this to Texture region
         Texture texture = new Texture(
                 Gdx.files.internal("assets/cardImgs/back90.png"));
 
@@ -48,7 +46,6 @@ public class DeckActor extends Actor {
         this.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("Clicked", "Deck was clicked at position (" + x + ", " + y + ")");
                 gameLogic.handleAction(new PickFromDeck());
             }
         });
@@ -60,14 +57,8 @@ public class DeckActor extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha)  {
-//        sprite.draw(batch);
         batch.draw(cardImage, getX(), getY(), width, height);
     }
 
-    private void loadCardActors() {
-        for (Card card : deck.getCards()) {
-            cardActors.add(new CardActor(card));
-        }
-    }
 
 }

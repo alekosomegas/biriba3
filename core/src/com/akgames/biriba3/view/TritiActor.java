@@ -3,7 +3,6 @@ package com.akgames.biriba3.view;
 import com.akgames.biriba3.controller.GameOptions;
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.model.Triti;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 
 public class TritiActor extends VerticalGroup {

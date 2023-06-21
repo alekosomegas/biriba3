@@ -2,6 +2,7 @@ package com.akgames.biriba3;
 
 import com.akgames.biriba3.controller.GameLogic;
 import com.akgames.biriba3.controller.GameOptions;
+import com.akgames.biriba3.model.Board;
 import com.akgames.biriba3.view.GameScreen;
 import com.akgames.biriba3.view.MainMenuScreen;
 import com.badlogic.gdx.Game;
@@ -55,7 +56,6 @@ public class Biriba3 extends Game {
 		return gameLogic;
 	}
 
-	//TODO: bug not dealing cards
 	public void createNewGame() {
 		gameLogic = GameLogic.createNewGame();
 		create();

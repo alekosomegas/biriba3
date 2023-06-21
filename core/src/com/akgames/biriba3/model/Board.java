@@ -1,5 +1,8 @@
 package com.akgames.biriba3.model;
 
+
+import com.akgames.biriba3.controller.GameOptions;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,13 +11,21 @@ import java.util.List;
  */
 public class Board {
     private List<Card> discardPile;
-    private List<Triti> trites;
+    // holds all the trites on the board
+    private List<List<Triti>> trites;
     private Deck deck;
+    private List<Card> biribaki1;
+    private List<Card> biribaki2;
 
-    public Board() {
+    public Board(int numTeams) {
         deck = new Deck();
         discardPile = new ArrayList<>();
-        trites = new ArrayList<>();
+        trites = new ArrayList<>(numTeams);
+        for(int i=0; i < numTeams; i++) {
+            trites.add(new ArrayList<Triti>());
+        }
+        this.biribaki1 = new ArrayList<>(GameOptions.NUM_CARDS_BIRIBAKI_1);
+        this.biribaki2 = new ArrayList<>(GameOptions.NUM_CARDS_BIRIBAKI_2);
     }
 
     public Deck getDeck() {
@@ -29,11 +40,17 @@ public class Board {
         discardPile.add(discardedCard);
     }
 
+    //TODO: refactor. -1 because teams start at 1
     public void addTriti(Triti triti) {
-        trites.add(triti);
+        trites.get(triti.getTeam()).add(triti);
     }
 
-    public List<Triti> getTrites() {
-        return trites;
+    public List<Triti> getTrites(int team) {
+        return trites.get(team);
+    }
+
+    public void createBiribakia(List<Card> cards1, List<Card> cards2) {
+        biribaki1 = cards1;
+        biribaki2 = cards2;
     }
 }

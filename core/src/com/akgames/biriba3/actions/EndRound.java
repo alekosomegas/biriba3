@@ -7,7 +7,6 @@ import java.util.List;
 public class EndRound implements PlayerAction{
     @Override
     public void execute() {
-        System.out.println("End round");
     }
 
     @Override

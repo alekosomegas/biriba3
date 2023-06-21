@@ -2,8 +2,10 @@ package com.akgames.biriba3.controller;
 
 import com.akgames.biriba3.actions.PlayerAction;
 import com.akgames.biriba3.model.Board;
+import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.model.Player;
 import com.akgames.biriba3.view.GameScreen;
+import com.akgames.biriba3.view.PlayerHandActor;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -26,19 +28,23 @@ public class GameLogic {
     private GameScreen gameScreen;
     private PropertyChangeSupport support;
     private boolean gameOver;
-    // teams?
+    private int numOfTeams;
+    private PlayerHandActor mainPlayerHandActor;
+    private boolean selectCardsActive;
+    private List<Card> selectedCards;
 
 
     // players created by the gameController / setup screen
     private GameLogic() {
         this.gameOptions = new GameOptions(this);
         this.playerActionsQueue = new ArrayList<>();
-        this.board = new Board();
         this.currentPlayerIndex = 0;
         this.gameOver = false;
+        this.selectedCards = new ArrayList<>();
         support = new PropertyChangeSupport(this);
 
     }
+
 
     public static GameLogic getInstance() {
         if (instance == null) {
@@ -59,8 +65,14 @@ public class GameLogic {
         return board;
     }
 
-    public void setPlayers(List<Player> players) {
+    public void setUpGame(List<Player> players) {
+        this.numOfTeams = players.size() == 3 ? 3 : 2;
         this.players = players;
+        this.board = new Board(numOfTeams);
+    }
+
+    public int getNumOfTeams() {
+        return numOfTeams;
     }
 
     public List<Player> getPlayers() {
@@ -97,9 +109,38 @@ public class GameLogic {
     }
 
     public void nextPlayer() {
-        currentPlayerIndex = (currentPlayerIndex +1) % players.size() ;
-        System.out.println(currentPlayerIndex);
+        currentPlayerIndex = (currentPlayerIndex +1) % players.size();
     }
 
 
+    public void setMainPlayerHandActor(PlayerHandActor mainPlayerHandActor) {
+        this.mainPlayerHandActor = mainPlayerHandActor;
+    }
+
+    public PlayerHandActor getMainPlayerHandActor() {
+        return mainPlayerHandActor;
+    }
+
+    public boolean isSelectCardsActive() {
+        return selectCardsActive;
+    }
+
+    public void setSelectCardsActive(boolean selectCardsActive) {
+        this.selectCardsActive = selectCardsActive;
+    }
+
+    public void refreshUi() {
+        gameScreen.show();
+    }
+
+    public List<Card> getSelectedCards() {
+        return selectedCards;
+    }
+
+    public void addToSelectedCards(Card selectedCard) {
+        this.selectedCards.add(selectedCard);
+    }
+    public void removeFromSelectedCards(Card card) {
+        this.selectedCards.remove(card);
+    }
 }

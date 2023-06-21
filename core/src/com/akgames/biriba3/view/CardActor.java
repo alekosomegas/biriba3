@@ -1,21 +1,14 @@
 package com.akgames.biriba3.view;
 
-import com.akgames.biriba3.actions.PickFromDeck;
+import com.akgames.biriba3.controller.GameLogic;
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.controller.GameOptions;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
-import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
-
-
 
 
 /**
@@ -24,10 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
  */
 public class CardActor extends Actor {
     private Card card;
-    private Sprite sprite;
     private TextureRegion cardImage;
-    private int[] position;
     private float width, height;
+
 
     public CardActor(final Card card) {
         this.card = card;
@@ -39,24 +31,26 @@ public class CardActor extends Actor {
         this.height = GameOptions.CARD_SIZE[1];
         this.setBounds(getX(), getY(), width, height);
 
+
         this.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("Clicked", "Card was clicked at position (" + x + ", " + y + ")");
-                Gdx.app.log("Clicked", "" + card);
+                if(card.isClickable()) {
+                    if (card.isSelected()) {
+                        GameLogic.getInstance().removeFromSelectedCards(card);
+                    } else {
+                        GameLogic.getInstance().addToSelectedCards(card);
+                    }
+
+                    int m = card.isSelected() ? -1 : 1;
+                    moveBy(0, 100 * m);
+                    card.setSelected(!card.isSelected());
+                }
+
             }
         });
 
 
-//
-//        this.addListener(new InputListener() {
-//
-//
-//            public void drag(InputEvent event, float x, float y, int pointer)
-//            {
-//                moveBy(x, y);
-//            }
-//        });
     }
 
     @Override
@@ -76,4 +70,6 @@ public class CardActor extends Actor {
     public Card getCard() {
         return card;
     }
+
+
 }

@@ -11,8 +11,8 @@ public class Triti {
 
     private Triti(List<Card> cards) {
         this.cards = cards;
-        //TODO: should getTeam
-        this.team = GameLogic.getInstance().currentPlayerIndex;
+        // team number starts at 1
+        this.team = GameLogic.getInstance().getCurrentPlayer().getTeamNumber()-1;
     }
 
     public static Triti createTriti(List<Card> cards) {
@@ -28,5 +28,9 @@ public class Triti {
 
     public void addCard(Card card) {
         cards.add(card);
+    }
+
+    public int getTeam() {
+        return team;
     }
 }

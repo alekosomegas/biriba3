@@ -2,6 +2,7 @@ package com.akgames.biriba3.view;
 
 import com.akgames.biriba3.Biriba3;
 import com.akgames.biriba3.actions.DealAction;
+import com.akgames.biriba3.controller.GameLogic;
 import com.akgames.biriba3.controller.GameOptions;
 import com.akgames.biriba3.ui.GroupParentTable;
 import com.badlogic.gdx.Gdx;
@@ -48,7 +49,6 @@ public class GameScreen extends ScreenAdapter {
 
         // Instantiates all the board actor elements. BoardActor -> DeckActor -> CardActors
         this.parentTable = new GroupParentTable(game);
-        //TODO: use a rootTable
         rootTable = new Table();
         rootTable.setFillParent(true);
         rootTable.setDebug(true);
@@ -59,9 +59,6 @@ public class GameScreen extends ScreenAdapter {
 
         rootTable.add(stack);
         stage.addActor(rootTable);
-//        stage.addActor(parentTable);
-//        stage.addActor(dealBtn);
-
     }
 
     @Override

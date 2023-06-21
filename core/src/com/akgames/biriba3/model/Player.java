@@ -34,6 +34,10 @@ public class Player {
         return hand.size();
     }
 
+    public int getTeamNumber() {
+        return teamNumber;
+    }
+
     public void act() {
 
     }

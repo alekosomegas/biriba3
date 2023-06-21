@@ -12,6 +12,8 @@ import java.util.List;
 public class GameOptions {
     public static final float[] CARD_SIZE = {150f, 225f};
     public static final int NUM_CARDS_PER_PLAYER = 11;
+    public static final int NUM_CARDS_BIRIBAKI_1 = 11;
+    public static final int NUM_CARDS_BIRIBAKI_2 = 11;
     public static Skin SKIN;
 
     private class PlayerTemp {
@@ -132,7 +134,7 @@ public class GameOptions {
                 players.add(player);
             }
         }
-        gameLogic.setPlayers(players);
+        gameLogic.setUpGame(players);
     }
 
 
