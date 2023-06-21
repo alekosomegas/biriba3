@@ -4,13 +4,10 @@ import com.akgames.biriba3.actions.PlayerAction;
 import com.akgames.biriba3.model.Board;
 import com.akgames.biriba3.model.Player;
 import com.akgames.biriba3.view.GameScreen;
-import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,6 +25,7 @@ public class GameLogic {
     public int currentPlayerIndex;
     private GameScreen gameScreen;
     private PropertyChangeSupport support;
+    private boolean gameOver;
     // teams?
 
 
@@ -37,7 +35,9 @@ public class GameLogic {
         this.playerActionsQueue = new ArrayList<>();
         this.board = new Board();
         this.currentPlayerIndex = 0;
+        this.gameOver = false;
         support = new PropertyChangeSupport(this);
+
     }
 
     public static GameLogic getInstance() {
@@ -95,4 +95,11 @@ public class GameLogic {
     public Player getCurrentPlayer() {
         return players.get(currentPlayerIndex);
     }
+
+    public void nextPlayer() {
+        currentPlayerIndex = (currentPlayerIndex +1) % players.size() ;
+        System.out.println(currentPlayerIndex);
+    }
+
+
 }

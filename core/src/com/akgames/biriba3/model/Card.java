@@ -43,6 +43,10 @@ public class Card {
         return this;
     }
 
+    public void setShowFace(boolean showFace) {
+        this.showFace = showFace;
+    }
+
     @Override
     public String toString(){
         return suit_symbol[suit]+verbose_rank[rank%13];

@@ -9,13 +9,11 @@ public class Player {
     private int score;
     private int penaltyPoints;
     private String name;
-    private boolean isAI;
     private int teamNumber;
 
-    public Player(String name, boolean isAI, int teamNumber) {
+    public Player(String name, int teamNumber) {
         hand = new ArrayList<>();
         this.name = name;
-        this.isAI = isAI;
         this.teamNumber = teamNumber;
     }
 
@@ -34,5 +32,9 @@ public class Player {
     }
     public int getCardCount() {
         return hand.size();
+    }
+
+    public void act() {
+
     }
 }

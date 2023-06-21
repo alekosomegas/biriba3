@@ -1,5 +1,6 @@
 package com.akgames.biriba3.actions;
 
+import com.akgames.biriba3.controller.GameLogic;
 import com.akgames.biriba3.model.Board;
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.model.Deck;
@@ -11,16 +12,26 @@ import java.util.List;
 import static com.akgames.biriba3.controller.GameOptions.NUM_CARDS_PER_PLAYER;
 
 public class DealAction implements PlayerAction {
-    private Board board = gameLogic.getBoard();
-    private Deck deck = gameLogic.getBoard().getDeck();
-    private List<Player> players = gameLogic.getPlayers();
+    private Board board;
+    private Deck deck;
+    private List<Player> players;
+    private GameLogic gameLogic;
+
+    public DealAction() {
+        this.gameLogic = GameLogic.getInstance();
+        this.board = gameLogic.getBoard();
+        this.deck = gameLogic.getBoard().getDeck();
+        this.players = gameLogic.getPlayers();
+    }
 
     @Override
     public void execute() {
         // Deal cards to all Players
         for (Player player : players) {
             for (int i=0; i < NUM_CARDS_PER_PLAYER; i++) {
-                player.addToHand(deck.getTopCard().turn());
+                Card card = deck.getTopCard();
+                if(players.indexOf(player) == 0) card.setShowFace(true);
+                player.addToHand(card);
             }
         }
 
@@ -31,7 +42,6 @@ public class DealAction implements PlayerAction {
         test.add(deck.getTopCard().turn());
         test.add(deck.getTopCard().turn());
         gameLogic.handleAction(new CreateTritiAction(), test);
-
     }
 
     @Override

@@ -7,8 +7,6 @@ import java.util.List;
 public interface PlayerAction {
 
 
-    GameLogic gameLogic = GameLogic.getInstance();
-
     public void execute();
     public void execute(List<?> params);
     public void undo();

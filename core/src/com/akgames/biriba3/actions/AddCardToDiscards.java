@@ -2,15 +2,24 @@ package com.akgames.biriba3.actions;
 
 import com.akgames.biriba3.controller.GameLogic;
 import com.akgames.biriba3.controller.GameOptions;
+import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.view.CardActor;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 
 import java.util.List;
 
 public class AddCardToDiscards implements PlayerAction{
+    private Card card;
+
+    public AddCardToDiscards(Card card) {
+        this.card = card;
+        card.setShowFace(true);
+    }
+
     @Override
     public void execute() {
-
+        GameLogic.getInstance().getBoard().addToDiscardPile(card);
+        GameLogic.getInstance().getCurrentPlayer().getHand().remove(card);
     }
 
     @Override

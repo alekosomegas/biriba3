@@ -29,6 +29,7 @@ public class GameScreen extends ScreenAdapter {
     private Stage stage;
     private GroupParentTable parentTable;
     private TextButton dealBtn;
+    private Table rootTable;
 
 
     public GameScreen(final Biriba3 game) {
@@ -43,15 +44,21 @@ public class GameScreen extends ScreenAdapter {
     public void show() {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
-        stage.setDebugAll(false);
+        stage.setDebugAll(true);
 
         // Instantiates all the board actor elements. BoardActor -> DeckActor -> CardActors
         this.parentTable = new GroupParentTable(game);
+        //TODO: use a rootTable
+        rootTable = new Table();
+        rootTable.setFillParent(true);
+        rootTable.setDebug(true);
+
         Stack stack = new Stack();
-        stack.setFillParent(true);
         stack.add(parentTable);
         stack.add(dealBtn);
-        stage.addActor(stack);
+
+        rootTable.add(stack);
+        stage.addActor(rootTable);
 //        stage.addActor(parentTable);
 //        stage.addActor(dealBtn);
 

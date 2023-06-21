@@ -1,6 +1,7 @@
 package com.akgames.biriba3.controller;
 
 import com.akgames.biriba3.model.Player;
+import com.akgames.biriba3.model.PlayerAI;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import java.beans.PropertyChangeListener;
@@ -123,7 +124,11 @@ public class GameOptions {
         List<Player> players = new ArrayList<>();
         for (PlayerTemp playerTemp : playersTemp) {
             if(playerTemp.active) {
-                Player player = new Player(playerTemp.name, playerTemp.isAi, playerTemp.team);
+                Player player = playerTemp.isAi ?
+                        new PlayerAI(playerTemp.name, playerTemp.team)
+                        :
+                        new Player(playerTemp.name, playerTemp.team);
+
                 players.add(player);
             }
         }

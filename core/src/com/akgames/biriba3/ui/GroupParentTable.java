@@ -3,16 +3,18 @@ package com.akgames.biriba3.ui;
 import com.akgames.biriba3.Biriba3;
 import com.akgames.biriba3.actions.AddCardToDiscards;
 import com.akgames.biriba3.actions.AddCardToTriti;
+import com.akgames.biriba3.actions.EndRound;
+import com.akgames.biriba3.actions.EndTurn;
 import com.akgames.biriba3.controller.GameLogic;
 import com.akgames.biriba3.controller.GameOptions;
-import com.akgames.biriba3.model.Triti;
+import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.view.BoardActor;
 import com.akgames.biriba3.view.CardActor;
-import com.akgames.biriba3.view.MainPlayerHandActor;
+import com.akgames.biriba3.view.PlayerHandActor;
 import com.akgames.biriba3.view.TritiActor;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -25,18 +27,14 @@ public class GroupParentTable extends Table{
 
     private GameLogic gameLogic;
     private BoardActor boardActor;
-    private float[] size;
-    private MainPlayerHandActor handActor;
+    private PlayerHandActor handActor;
     private TextButton exitGameBtn;
+    private TextButton endTurn;
 
     public GroupParentTable(final Biriba3 game) {
         this.gameLogic = GameLogic.getInstance();
-        this.size = new float[]{Gdx.graphics.getWidth() - 100f, Gdx.graphics.getHeight() - 100f};
-        this.boardActor = new BoardActor(gameLogic.getBoard(), size);
-        this.handActor = new MainPlayerHandActor(gameLogic.getPlayers().get(0), boardActor);
-
-        this.setFillParent(true);
-        this.setBounds(50, 50, size[0], size[1]);
+        this.boardActor = new BoardActor(gameLogic.getBoard());
+        this.handActor = new PlayerHandActor(gameLogic.getPlayers().get(0));
 
         // Place UI elements
         exitGameBtn = new TextButton("Exit Game", GameOptions.SKIN);
@@ -46,33 +44,45 @@ public class GroupParentTable extends Table{
                 game.createNewGame();
             }
         });
-        add(exitGameBtn);
+
+        endTurn = new TextButton("End round", GameOptions.SKIN);
+        endTurn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameLogic.handleAction(new EndTurn());}
+        });
+
+
+        add(exitGameBtn).colspan(2);
         add().row();
 
         if(gameLogic.getNumOfPlayers() == 2) {
-            addPlayerBox(1);
+            addPlayerBox(1).colspan(2);
             row();
-            add(boardActor).pad(50).size(boardActor.getSize()[0], boardActor.getSize()[1]);
+            add(boardActor).pad(150);
             row();
             add(handActor);
         } else {
-            setFillParent(true);
             defaults().pad(10);
             addPlayerBox(2);
             row();
             addPlayerBox(1);
-            add(boardActor).pad(50).size(boardActor.getSize()[0], boardActor.getSize()[1]);
+            add(boardActor).pad(50);
 
             if (gameLogic.getNumOfPlayers() == 4) {
                 addPlayerBox(3);
             }
 
             row();
-            add(handActor).expandX().colspan(3);
+            add(handActor).expandX().colspan(2);
         }
+            add(endTurn);
 
         final DragAndDrop dragAndDrop = new DragAndDrop();
+        setDragAndDrop(dragAndDrop);
+    }
 
+    private void setDragAndDrop(final DragAndDrop dragAndDrop) {
         for (final CardActor cardActor : handActor.getHand()) {
             dragAndDrop.addSource(new DragAndDrop.Source(cardActor) {
                 @Override
@@ -101,7 +111,9 @@ public class GroupParentTable extends Table{
 
                 @Override
                 public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
-                    GameLogic.getInstance().handleAction(new AddCardToDiscards(), Collections.singletonList(payload));
+                    CardActor cardActor = (CardActor)payload.getDragActor();
+                    Card card = cardActor.getCard();
+                    GameLogic.getInstance().handleAction(new AddCardToDiscards(card));
                 }
             });
             for (final TritiActor triti : boardActor.getGroupTrites().getTritiActors()) {
@@ -120,10 +132,8 @@ public class GroupParentTable extends Table{
         }
     }
 
-    private void addPlayerBox(int index) {
-        String name = gameLogic.getPlayers().get(index).getName();
-        int cardCount = gameLogic.getPlayers().get(index).getCardCount();
-        add(new PlayerBox(name, cardCount)).expandX().fill();
+    private Cell<?> addPlayerBox(int index) {
+       return add(new PlayerBox(gameLogic.getPlayers().get(index))).expandX().fill();
     }
 
 }

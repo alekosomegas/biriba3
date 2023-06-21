@@ -28,13 +28,11 @@ public class DeckActor extends Actor {
     private Sprite sprite;
     private TextureRegion cardImage;
     private float width, height;
-    private float[] parentSize;
 
 
-    public DeckActor(Deck deck, float[] parentSize) {
+    public DeckActor(Deck deck) {
         this.gameLogic = GameLogic.getInstance();
         this.deck = deck;
-        this.parentSize = parentSize;
         cardActors = new ArrayList<>();
 
         //TODO: change this to Texture region
