@@ -32,6 +32,5 @@ public class AddCardToDiscards implements PlayerAction{
 
     @Override
     public void undo() {
-
     }
 }

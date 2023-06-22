@@ -6,6 +6,7 @@ import com.akgames.biriba3.model.Board;
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.model.Player;
 import com.akgames.biriba3.model.Triti;
+import com.badlogic.gdx.Gdx;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +34,7 @@ public class CreateTritiAction implements PlayerAction{
             card.setSelected(false);
         }
         Triti triti = Triti.createTriti(new ArrayList<>(selectedCards));
+        Gdx.app.log("CreateTritiAction", "" + triti + "sc: " + selectedCards.size());
         if(triti != null) {
             hand.removeAll(selectedCards);
             selectedCards.clear();

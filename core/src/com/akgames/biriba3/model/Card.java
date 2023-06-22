@@ -58,7 +58,7 @@ public class Card implements Comparable<Card> {
 
     @Override
     public String toString(){
-        return suit_symbol[suit]+verbose_rank[rank%13];
+        return isJoker ? "Joker" : verbose_suit[suit]+verbose_rank[rank%13];
     }
 
     public boolean isClickable() {

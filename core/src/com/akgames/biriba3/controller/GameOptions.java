@@ -122,7 +122,7 @@ public class GameOptions {
     }
 
     //Create players and hand them to gameLogic
-    public void createPlayers() {
+    public boolean createPlayers() {
         List<Player> players = new ArrayList<>();
         for (PlayerTemp playerTemp : playersTemp) {
             if(playerTemp.active) {
@@ -135,6 +135,7 @@ public class GameOptions {
             }
         }
         gameLogic.setUpGame(players);
+        return true;
     }
 
 
