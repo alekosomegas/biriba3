@@ -16,6 +16,7 @@ public class Board {
     private Deck deck;
     private List<Card> biribaki1;
     private List<Card> biribaki2;
+    private int numBiribakia;
 
     public Board(int numTeams) {
         deck = new Deck();
@@ -26,6 +27,7 @@ public class Board {
         }
         this.biribaki1 = new ArrayList<>(GameOptions.NUM_CARDS_BIRIBAKI_1);
         this.biribaki2 = new ArrayList<>(GameOptions.NUM_CARDS_BIRIBAKI_2);
+        this.numBiribakia = 2;
     }
 
     public Deck getDeck() {
@@ -40,7 +42,6 @@ public class Board {
         discardPile.add(discardedCard);
     }
 
-    //TODO: refactor. -1 because teams start at 1
     public void addTriti(Triti triti) {
         trites.get(triti.getTeam()).add(triti);
     }
@@ -52,5 +53,14 @@ public class Board {
     public void createBiribakia(List<Card> cards1, List<Card> cards2) {
         biribaki1 = cards1;
         biribaki2 = cards2;
+    }
+
+    public List<Card> getBiribaki() {
+        numBiribakia--;
+        return numBiribakia == 1 ? biribaki2 : biribaki1;
+    }
+
+    public int getNumBiribakia() {
+        return numBiribakia;
     }
 }

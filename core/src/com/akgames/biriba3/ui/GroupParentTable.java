@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
@@ -71,10 +72,6 @@ public class GroupParentTable extends Table{
             }
         });
 
-        add(exitGameBtn).colspan(2);
-        add(selectCards);
-        add(createNewTriti);
-        add().row();
 
         if(gameLogic.getNumOfPlayers() == 2) {
             addPlayerBox(1).colspan(3);
@@ -96,7 +93,13 @@ public class GroupParentTable extends Table{
             row();
             add(mainPlayerHandActor).expandX().colspan(3);
         }
-            add(endTurn);
+
+        VerticalGroup verticalGroup = new VerticalGroup();
+        verticalGroup.addActor(endTurn);
+        verticalGroup.addActor(exitGameBtn);
+        verticalGroup.addActor(selectCards);
+        verticalGroup.addActor(createNewTriti);
+        add(verticalGroup);
 
         final DragAndDrop dragAndDrop = new DragAndDrop();
         setDragAndDrop(dragAndDrop);

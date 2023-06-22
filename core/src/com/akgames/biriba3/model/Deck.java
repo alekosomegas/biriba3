@@ -21,11 +21,11 @@ public class Deck {
         for (int i=0; i<52*2; i++) {
             cards.add(new Card(i%52));
         }
-        //TODO: image for jokers in card getImgURL
-//        // add jokers
-//        for (int i=0; i < 4; i++) {
-//            cards.add(new Card(-1));
-//        }
+
+        // add jokers
+        for (int i=0; i < 4; i++) {
+            cards.add(new Card(-1));
+        }
         this.size = cards.size();
         shuffle();
     }

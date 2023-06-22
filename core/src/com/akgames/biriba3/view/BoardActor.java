@@ -60,7 +60,8 @@ public class BoardActor extends Table implements PropertyChangeListener {
         DeckVGroup.addActor(deckActor);
         DeckVGroup.addActor(RemainingCardsHGroup);
 
-        add(biribakiaActor).size(GameOptions.CARD_SIZE[0], GameOptions.CARD_SIZE[1]).left();
+        int numBiribakia = board.getNumBiribakia();
+        add(biribakiaActor).size(GameOptions.CARD_SIZE[numBiribakia == 2 ? 1 : 0], GameOptions.CARD_SIZE[1]).left();
         add(discardsPileActor).left();
 
         add(DeckVGroup).top().right().expand();

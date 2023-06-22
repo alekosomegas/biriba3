@@ -1,6 +1,7 @@
 package com.akgames.biriba3.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Player {
@@ -23,9 +24,11 @@ public class Player {
 
     public void addToHand(Card card) {
         hand.add(card);
+        Collections.sort(hand);
     }
     public void addToHand(List<Card> cards) {
         hand.addAll(cards);
+        Collections.sort(hand);
     }
     public String getName() {
         return name;
