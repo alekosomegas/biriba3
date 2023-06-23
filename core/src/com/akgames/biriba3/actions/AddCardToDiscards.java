@@ -13,6 +13,9 @@ public class AddCardToDiscards implements PlayerAction{
     public AddCardToDiscards(Card card) {
         this.card = card;
         card.setShowFace(true);
+        card.setSelected(false);
+        card.setClickable(false);
+        GameLogic.getInstance().getSelectedCards().remove(card);
     }
 
     @Override

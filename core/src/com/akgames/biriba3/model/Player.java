@@ -1,5 +1,8 @@
 package com.akgames.biriba3.model;
 
+import com.akgames.biriba3.controller.GameLogic;
+import com.akgames.biriba3.controller.GameOptions;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +26,7 @@ public class Player {
     }
 
     public void addToHand(Card card) {
+        if (GameLogic.getInstance().currentPlayerIndex == 0) card.setClickable(true);
         hand.add(card);
         Collections.sort(hand);
     }

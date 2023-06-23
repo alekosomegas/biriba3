@@ -30,12 +30,13 @@ public class CreateTritiAction implements PlayerAction{
 
     @Override
     public void execute() {
-        for(Card card : selectedCards) {
-            card.setSelected(false);
-        }
         Triti triti = Triti.createTriti(new ArrayList<>(selectedCards));
-        Gdx.app.log("CreateTritiAction", "" + triti + "sc: " + selectedCards.size());
         if(triti != null) {
+            for(Card card : selectedCards) {
+                card.setSelected(false);
+                card.setClickable(false);
+                card.setShowFace(true);
+            }
             hand.removeAll(selectedCards);
             selectedCards.clear();
             board.addTriti(triti);

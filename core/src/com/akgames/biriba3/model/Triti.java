@@ -1,7 +1,6 @@
 package com.akgames.biriba3.model;
 
 import com.akgames.biriba3.controller.GameLogic;
-import com.badlogic.gdx.Gdx;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,9 +8,9 @@ import java.util.List;
 
 public class Triti {
     private int team;
-    private List<Card> cards;
+    private ArrayList<Card> cards;
 
-    private Triti(List<Card> cards) {
+    private Triti(ArrayList<Card> cards) {
         this.cards = cards;
         // team number starts at 1
         this.team = GameLogic.getInstance().getCurrentPlayer().getTeamNumber()-1;
@@ -21,16 +20,18 @@ public class Triti {
     public static Triti createTriti(List<Card> cards) {
         if (validate(cards)) {
             cards.sort(Collections.<Card>reverseOrder());
-            return new Triti(cards);
+            checkAce(cards);
+            return new Triti((ArrayList<Card>) cards);
         }
         return null;
     }
 
-    public List<Card> getCards() {
+    public ArrayList<Card> getCards() {
         return cards;
     }
 
     public void addCard(Card card) {
+        // Validate card
         cards.add(card);
     }
 
@@ -119,6 +120,7 @@ public class Triti {
             if(characteristics.numTwos == 0) {
                 // remove joker, check rest for same suit, if not seq for gap
                 if (differentSuit(characteristics.noJokers)) return false;
+                checkAce(cards);
                 // Must be consecutive. If case J-4-5 will return true
                 if(isNotSequential(characteristics.noJokers)) {
                     // Fill gap with Joker
@@ -139,6 +141,7 @@ public class Triti {
                 if(!canHaveANormalTwo(characteristics.noJokers)) return false;
                 // remove joker, check rest for same suit, if not seq for gap
                 if (differentSuit(characteristics.noJokers)) return false;
+                checkAce(cards);
                 // Must be consecutive. If case J-4-5 will return true
                 if(isNotSequential(characteristics.noJokers)) {
                     // Fill gap with Joker
@@ -158,28 +161,36 @@ public class Triti {
             // -------------------------------------------------------//
             // Case 2-a: Has zero 2
             if(characteristics.numTwos == 0) {
+                checkAce(cards);
                 // Must have the same suit and be sequential
                 if (differentSuit(cards) ||
                         isNotSequential(cards)) return false;
             }
             // -------------------------------------------------------//
-            // Case 2-b: Has one 2
+            // Case 2-b: Has one 2 and no joker
             if(characteristics.numTwos == 1) {
                 // 2 is normal if (3 AND A) or (4 AND 3) exist
                 // and is a joker if a gap exists
-
-                // Normal 2 (all cards in sequence)  => 3-2-A, 4-3-2,
-                if(!isNotSequential(cards)) return true;
+                checkAce(cards);
+                // Normal 2 (all cards in sequence ans same suit)  => 3-2-A, 4-3-2,
+                if(!isNotSequential(cards) && !differentSuit(cards)) return true;
 
                 // Joker normal gap                  => 8-2-3, 9-8-2
                 // Joker when 3 and 4 exist          => 6-2-4-3
                 // remove the 2 and check if a gap exists
                 Card two = characteristics.twosList.get(0);
                 characteristics.noJokers.remove(two);
-                int missingRank = singleGapExists(characteristics.noJokers);
-                if (missingRank != -1) {
-                    // Turn 2 into a joker and fill the gap
-                    two.setValueAndRank(missingRank, cards.get(0).getSuit());
+                // check that the rest have the same suit
+                if(differentSuit(characteristics.noJokers)) return false;
+                if(isNotSequential(characteristics.noJokers)) {
+                    int missingRank = singleGapExists(characteristics.noJokers);
+                    if (missingRank != -1) {
+                        // Turn 2 into a joker and fill the gap
+                        two.setValueAndRank(missingRank, characteristics.noJokers.get(0).getSuit());
+                    }
+                    else return false;
+                } else {
+                    two.setValueAndRank(characteristics.noJokers.get(0).getRank() -1, characteristics.noJokers.get(0).getSuit());
                 }
             }
             // -------------------------------------------------------//
@@ -189,11 +200,11 @@ public class Triti {
                 // To be normal at least one of the is same suit
                 // AND if (4-2-2, 3-2-2, 2-2-A, 2-3-2-A )
 
+                checkAce(cards);
                 // if not (4 or 3 or A) not valid
                 if(!canHaveANormalTwo(cards)) return false;
 
                 // set joker and normal 2
-                // TODO: BUG same suit.
                 // Take both 2s out temporarily, check suit of remaining and save it
                 // then loop through twos find first that matches suit assign other as joker.
                 // if none found return false
@@ -210,16 +221,6 @@ public class Triti {
                 }
                 // If both have the same suit use first as joker
                 if(characteristics.twoAsAJoker == null) characteristics.twoAsAJoker = characteristics.twosList.get(0);
-
-//                for(Card two : characteristics.twosList) {
-//                    // if different suit
-//                    if (two.getSuit() != cards.get(cards.size()-1).getSuit()) {
-//                        // Both twos can not have different suit from the largest card in set
-//                        if(characteristics.twoAsAJoker != null) return false;
-//                        characteristics.twoAsAJoker = two;
-//                    }
-//                    if(characteristics.twoAsAJoker == null) characteristics.twoAsAJoker = two;
-//                }
 
                 // remove the 2 that is a joker from the cards
                 characteristics.noJokers.remove(characteristics.twoAsAJoker);
@@ -245,11 +246,6 @@ public class Triti {
                 }
             }
         }
-
-
-
-
-//        return checkSize(cards) && checkJokers(cards) && checkTwos(cards);
         return true;
     }
 
@@ -295,48 +291,6 @@ public class Triti {
         return cards.size() >= 3;
     }
 
-    //TODO: refactor. Split case noJoker, Joker, 2 as a Joker, 2 2s
-    private static boolean checkJokers(List<Card> cards) {
-        int numJokers = 0;
-        Card joker = null;
-        // all cards except jokers
-        List<Card> tempList = new ArrayList<>(cards);
-        for(Card card : cards) {
-            if (card.isJoker) {
-                joker = card;
-                tempList.remove(card);
-                numJokers++;
-            }
-        }
-
-        // Only one Joker allowed
-        if(numJokers > 1) return false;
-
-        // Must have same suit
-        if (differentSuit(tempList)) return false;
-
-        // Must be consecutive. If case J-4-5 will return true
-        if(isNotSequential(tempList)) {
-            // If a joker exist
-            if (numJokers == 1) {
-                // Fill gap with Joker
-                int missingRank = singleGapExists(tempList);
-                if( missingRank != -1) {
-                    joker.setValueAndRank(missingRank,tempList.get(0).getSuit());
-                }
-                //TODO: not checking 2
-                else return false;
-            }else {
-                return false;
-            }
-        }
-
-        // If it is sequential and a Joker exist put it on bottom
-        if (numJokers == 1 && !isNotSequential(tempList)) {
-            joker.setValueAndRank(tempList.get(0).getRank() -1, tempList.get(0).getSuit());
-        }
-        return true;
-    }
 
     private static boolean differentSuit(List<Card> cards) {
         int suit = cards.get(0).getSuit();
@@ -384,55 +338,29 @@ public class Triti {
     }
 
 
-    private static boolean checkAce(List<Card> tempList) {
-        if (tempList.get(0).getRank() == 1) {
-            if (tempList.get(tempList.size() - 1).getRank() == 12 && tempList.get(tempList.size() - 2).getRank() == 11) {
-//                tempList.get(0).setRank(13);
-            } else {
-//                tempList.get(0).setRank(1);
-            }
-            Collections.sort(tempList);
-        }
+    /**
+     * Check if K and Q exist and change to 13
+     */
+    private static void checkAce(List<Card> cards) {
+        boolean hasKing = false;
+        boolean hasQueen = false;
+        Card ace = null;
 
-        return true;
-
-    }
-
-    private static boolean checkTwos(List<Card> cards) {
-        // Can only have one as this comes after the joker check
-        boolean hasJoker = false;
-        int numTwos = 0;
-        List<Card> twosList = new ArrayList<>(2);
-        Card TwoAsAJoker = null;
-
-        // all cards except jokers
-        List<Card> tempList = new ArrayList<>(cards);
         for(Card card : cards) {
-            if (card.isJoker) {
-                tempList.remove(card);
-                hasJoker = true;
-            }
-            if (card.getRank() == 2) {
-                // not allowed to have more than two 2s
-                if(numTwos == 2) return false;
-                numTwos++;
-                twosList.add(card);
-            }
+            if (card.getRank() == 13) hasKing = true;
+            if (card.getRank() == 12) hasQueen = true;
+            if (card.getRank() == 1) ace = card;
         }
 
-        // One 2
-        if(numTwos == 1) {
-            // Is it a normal 2?
-            isNotSequential(tempList);
-
+        if(ace != null && hasKing && hasQueen) {
+            // It is ok to have value of 13 (same as A of next suit)
+            // because it will never leave the triti
+            ace.setValueAndRank(14, ace.getSuit());
+            // sort again to place ace on top
+            Collections.sort(cards);
         }
 
-        //  Two 2s
-        if(numTwos == 2) {
-
-        }
-
-        // including no 2s
-        return true;
     }
+
+
 }

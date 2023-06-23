@@ -4,6 +4,7 @@ import com.akgames.biriba3.controller.GameLogic;
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.controller.GameOptions;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -31,8 +32,7 @@ public class CardActor extends Actor {
         this.height = GameOptions.CARD_SIZE[1];
         this.setBounds(getX(), getY(), width, height);
 
-
-        this.addListener(new ClickListener() {
+        this.addListener(new ClickListener(Input.Buttons.RIGHT) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(card.isClickable()) {
@@ -41,22 +41,16 @@ public class CardActor extends Actor {
                     } else {
                         GameLogic.getInstance().addToSelectedCards(card);
                     }
-
-                    int m = card.isSelected() ? -1 : 1;
-                    moveBy(0, 100 * m);
                     card.setSelected(!card.isSelected());
                 }
-
             }
         });
-
-
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha)  {
-
-        batch.draw(cardImage, getX(), getY(), width, height);
+        float offset = card.isSelected() ? 100 : 0;
+        batch.draw(cardImage, getX(), getY() + offset, width, height);
     }
 
     public void setPosition(int x, int y) {

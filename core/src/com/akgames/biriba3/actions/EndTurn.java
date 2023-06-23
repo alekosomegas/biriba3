@@ -7,7 +7,6 @@ import java.util.List;
 public class EndTurn implements PlayerAction{
     @Override
     public void execute() {
-        GameLogic.getInstance().handleAction(new SelectCards(false));
         GameLogic.getInstance().nextPlayer();
 
         GameLogic.getInstance().getCurrentPlayer().act();

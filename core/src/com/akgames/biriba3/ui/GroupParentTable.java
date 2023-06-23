@@ -29,7 +29,6 @@ public class GroupParentTable extends Table{
     private PlayerHandActor mainPlayerHandActor;
     private TextButton exitGameBtn;
     private TextButton endTurn;
-    private TextButton selectCards;
     private TextButton createNewTriti;
 
 
@@ -56,14 +55,7 @@ public class GroupParentTable extends Table{
                 gameLogic.handleAction(new EndTurn());}
         });
 
-        selectCards = new TextButton("Select mode", GameOptions.SKIN);
-        selectCards.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                gameLogic.setSelectCardsActive(!gameLogic.isSelectCardsActive());
-                gameLogic.handleAction(new SelectCards(gameLogic.isSelectCardsActive()));
-            }
-        });
+
         createNewTriti = new TextButton("Create new Triti", GameOptions.SKIN);
         createNewTriti.addListener(new ChangeListener() {
             @Override
@@ -97,7 +89,6 @@ public class GroupParentTable extends Table{
         VerticalGroup verticalGroup = new VerticalGroup();
         verticalGroup.addActor(endTurn);
         verticalGroup.addActor(exitGameBtn);
-        verticalGroup.addActor(selectCards);
         verticalGroup.addActor(createNewTriti);
         add(verticalGroup);
 
@@ -107,7 +98,6 @@ public class GroupParentTable extends Table{
 
     private void setDragAndDrop(final DragAndDrop dragAndDrop) {
         for (final CardActor cardActor : mainPlayerHandActor.getHand()) {
-            if(cardActor.getCard().isClickable()) continue;
             dragAndDrop.addSource(new DragAndDrop.Source(cardActor) {
                 @Override
                 public DragAndDrop.Payload dragStart(InputEvent event, float x, float y, int pointer) {
