@@ -9,19 +9,25 @@ import java.util.List;
 public class Triti {
     private int team;
     private ArrayList<Card> cards;
+    private int suit;
+    private Characteristics characteristics;
 
-    private Triti(ArrayList<Card> cards) {
+    private Triti(ArrayList<Card> cards, Characteristics characteristics) {
         this.cards = cards;
         // team number starts at 1
         this.team = GameLogic.getInstance().getCurrentPlayer().getTeamNumber()-1;
+        this.suit = cards.get(0).getSuit();
+        this.characteristics = characteristics;
     }
+
 
     @SuppressWarnings("Since15")
     public static Triti createTriti(List<Card> cards) {
         if (validate(cards)) {
             cards.sort(Collections.<Card>reverseOrder());
+            // TODO: needed here?
             checkAce(cards);
-            return new Triti((ArrayList<Card>) cards);
+            return new Triti((ArrayList<Card>) cards, Characteristics.getCharacteristics());
         }
         return null;
     }
@@ -30,10 +36,84 @@ public class Triti {
         return cards;
     }
 
-    public void addCard(Card card) {
-        // Validate card
-        cards.add(card);
+    // for testing
+    public ArrayList<Integer> getCardsAsValues() {
+        ArrayList<Integer> result = new ArrayList<>(cards.size());
+        for (Card card : cards) {
+            result.add(card.getRank());
+        }
+        return result;
     }
+
+    // TODO: refactor split function
+    public boolean validateAddCard(Card card) {
+        // triti is complete
+        if (this.cards.size() == 13) return false;
+
+        ArrayList<Card> tempTritiCards = new ArrayList<>(this.getCards().size());
+
+        for (int i = 0; i < this.getCards().size(); i++) {
+            tempTritiCards.add(new Card(this.getCards().get(i).getInitialValue()));
+        }
+
+        tempTritiCards.add(card);
+
+        return validate(tempTritiCards);
+    }
+
+    public boolean addCard(Card card) {
+        // triti is complete
+        if (this.cards.size() == 13) return false;
+
+        ArrayList<Card> tempTritiCards = new ArrayList<>(this.getCards().size());
+
+        for (int i = 0; i < this.getCards().size(); i++) {
+            tempTritiCards.add(new Card(this.getCards().get(i).getInitialValue()));
+        }
+
+        tempTritiCards.add(card);
+
+        if (!validate(tempTritiCards)) return false;
+
+        cards = tempTritiCards;
+        cards.sort(Collections.<Card>reverseOrder());
+
+        //TODO: refactor
+        for (Card tcard : cards) {
+            tcard.setSelected(false);
+            tcard.setClickable(false);
+            tcard.setShowFace(true);
+        }
+        return true;
+    }
+    public void addCard(List<Card> inCards) {
+
+        if (this.cards.size() == 13) return;
+        if (this.cards.size()  + inCards.size() > 13) return;
+
+
+        ArrayList<Card> tempTritiCards = new ArrayList<>(this.getCards().size());
+
+        for (int i = 0; i < this.getCards().size(); i++) {
+            tempTritiCards.add(new Card(this.getCards().get(i).getInitialValue()));
+        }
+
+        tempTritiCards.addAll(inCards);
+
+        if (!validate(tempTritiCards)) return;
+
+        this.cards = tempTritiCards;
+        this.cards.sort(Collections.<Card>reverseOrder());
+
+        //TODO: refactor
+        for (Card tcard : cards) {
+            tcard.setSelected(false);
+            tcard.setClickable(false);
+            tcard.setShowFace(true);
+        }
+    }
+
+
 
     public int getTeam() {
         return team;
@@ -83,7 +163,9 @@ public class Triti {
         List<Card> noJokers;
         Card twoAsAJoker;
         Card joker;
-        public Characteristics() {
+
+        private static Characteristics instance;
+        private Characteristics() {
             this.numJokers = 0;
             this.numTwos = 0;
             this.twosList = new ArrayList<>();
@@ -92,6 +174,13 @@ public class Triti {
             this.joker = null;
         }
 
+        public static Characteristics getNewCharacteristics() {
+            instance = new Characteristics();
+            return instance;
+        }
+        public static Characteristics getCharacteristics() {
+            return instance;
+        }
         public boolean failsBasicChecks() {
             // Only one Joker allowed
             if(numJokers > 1) return true;
@@ -102,13 +191,14 @@ public class Triti {
 
             return false;
         }
+
     }
-    private static boolean validate(List<Card> cards) {
+    public static boolean validate(List<Card> cards) {
         // Basic validity checks
         if (!checkSize(cards)) return false;
         Collections.sort(cards);
 
-        Characteristics characteristics = new Characteristics();
+        Characteristics characteristics = Characteristics.getNewCharacteristics();
         setCharacteristics(cards, characteristics);
         if(characteristics.failsBasicChecks()) return false;
 
@@ -126,16 +216,17 @@ public class Triti {
                     // Fill gap with Joker
                     int missingRank = singleGapExists(characteristics.noJokers);
                     if( missingRank != -1) {
-                        characteristics.joker.setValueAndRank(missingRank,characteristics.noJokers.get(0).getSuit());
+                        characteristics.joker.setValueAndRankAndSuit(missingRank,
+                                characteristics.noJokers.get(0).getSuit());
                     }
                     else return false;
                 } else {
-                    characteristics.joker.setValueAndRank(characteristics.noJokers.get(0).getRank() -1,characteristics.noJokers.get(0).getSuit());
+                    characteristics.joker.setValueAndRankAndSuit(characteristics.noJokers.get(0).getRank() -1,characteristics.noJokers.get(0).getSuit());
                 }
 
             }
             // -------------------------------------------------------//
-            // Case 1-b: Has only one 2
+            // Case 1-b: J + 2
             if(characteristics.numTwos == 1) {
                 //TODO: refactor same as above except 1st line
                 if(!canHaveANormalTwo(characteristics.noJokers)) return false;
@@ -147,12 +238,19 @@ public class Triti {
                     // Fill gap with Joker
                     int missingRank = singleGapExists(characteristics.noJokers);
                     if( missingRank != -1) {
-                        characteristics.joker.setValueAndRank(missingRank,characteristics.noJokers.get(0).getSuit());
+                        characteristics.joker.setValueAndRankAndSuit(missingRank,characteristics.noJokers.get(0).getSuit());
                     }
                     else return false;
                 } else {
-                    characteristics.joker.setValueAndRank(characteristics.noJokers.get(0).getRank() -1,characteristics.noJokers.get(0).getSuit());
+                    // TODO: refactor. very confusing
+                    // if an ace exist at rank 1 joker should go up
+                    int up = characteristics.noJokers.get(characteristics.noJokers.size()-1).getRank() +1;
+                    int down = characteristics.noJokers.get(0).getRank() -1;
+                    characteristics.joker.setValueAndRankAndSuit(
+                            characteristics.noJokers.get(0).getRank() == 1 ? up : down,
+                            characteristics.noJokers.get(0).getSuit());
                 }
+                    System.out.println(characteristics.joker.getRank());
             }
         }
         // -------------------------------------------------------//
@@ -186,11 +284,14 @@ public class Triti {
                     int missingRank = singleGapExists(characteristics.noJokers);
                     if (missingRank != -1) {
                         // Turn 2 into a joker and fill the gap
-                        two.setValueAndRank(missingRank, characteristics.noJokers.get(0).getSuit());
+                        two.setValueAndRankAndSuit(missingRank, characteristics.noJokers.get(0).getSuit());
+                        characteristics.twoAsAJoker = two;
                     }
                     else return false;
                 } else {
-                    two.setValueAndRank(characteristics.noJokers.get(0).getRank() -1, characteristics.noJokers.get(0).getSuit());
+                    two.setValueAndRankAndSuit(characteristics.noJokers.get(0).getRank() -1,
+                            characteristics.noJokers.get(0).getSuit());
+                    characteristics.twoAsAJoker = two;
                 }
             }
             // -------------------------------------------------------//
@@ -216,6 +317,7 @@ public class Triti {
                     if(two.getSuit() != suit) {
                         // Both twos can not have different suit from the rest
                         if(characteristics.twoAsAJoker != null) return false;
+                        // find 2 as a joker
                         characteristics.twoAsAJoker = two;
                     }
                 }
@@ -228,11 +330,19 @@ public class Triti {
                 // must be same suit
                 if(differentSuit(characteristics.noJokers)) return false;
 
-                // if the rest is in sequence (e.g. 4-3-2) then attach 2 at bottom
+                // if the rest is in sequence (e.g. 4-3-2) then attach 2
                 if(!isNotSequential(characteristics.noJokers)){
-                    // turn 2 to a joker
-                    characteristics.twoAsAJoker.setValueAndRank(characteristics.noJokers.get(0).getRank(),
-                            characteristics.noJokers.get(0).getSuit());
+                    // turn 2 to a joker at bottom if no ace there
+                    int index =
+                            characteristics.noJokers.get(0).getRank() == 1 ?
+                            characteristics.noJokers.size()-1 : 0;
+                    // TODO: refactor.
+                    // this is to offset the way setRank works(removes 1)
+                    int i = index == 0 ? -1 : 1;
+
+                    characteristics.twoAsAJoker.setValueAndRankAndSuit(
+                            characteristics.noJokers.get(index).getRank() + i,
+                            characteristics.noJokers.get(index).getSuit());
                     return true;
                 }
                 // Find and fill the gap
@@ -240,7 +350,7 @@ public class Triti {
                     int missingRank = singleGapExists(characteristics.noJokers);
                     if (missingRank != -1) {
                         // Turn 2 into a joker and fill the gap
-                        characteristics.twoAsAJoker.setValueAndRank(missingRank, cards.get(0).getSuit());
+                        characteristics.twoAsAJoker.setValueAndRankAndSuit(missingRank, cards.get(0).getSuit());
                         return true;
                     } else return false;
                 }
@@ -306,6 +416,7 @@ public class Triti {
      * @return The missing Rank int if and only if only one gap is found. -1 Otherwise.
      */
     private static int singleGapExists(List<Card> cards) {
+        Collections.sort(cards);
         int validGaps = 0;
         int missingRank = -1;
         for (int i = 0; i < cards.size() - 1; i++) {
@@ -321,12 +432,13 @@ public class Triti {
                 if(validGaps == 1) return -1;
                 // update only on first find
                 validGaps = 1;
-                missingRank = current.getRank() + 1;
+                missingRank = current.getRank() +1 ;
             }
         }
         return missingRank;
     }
     private static boolean isNotSequential(List<Card> cards) {
+        Collections.sort(cards);
         for (int i = 0; i < cards.size() - 1; i++) {
             Card current = cards.get(i);
             Card next = cards.get(i + 1);
@@ -344,18 +456,23 @@ public class Triti {
     private static void checkAce(List<Card> cards) {
         boolean hasKing = false;
         boolean hasQueen = false;
+        boolean hasJoker = false;
         Card ace = null;
 
         for(Card card : cards) {
             if (card.getRank() == 13) hasKing = true;
             if (card.getRank() == 12) hasQueen = true;
+            if (card.isJoker) hasJoker = true;
             if (card.getRank() == 1) ace = card;
         }
 
-        if(ace != null && hasKing && hasQueen) {
+        // A-K-Q, A-J-Q, A-K-J
+        if ( (ace != null) &&
+            ((hasKing && hasQueen) ||
+                    ((hasKing || hasQueen) && hasJoker)) ) {
             // It is ok to have value of 13 (same as A of next suit)
             // because it will never leave the triti
-            ace.setValueAndRank(14, ace.getSuit());
+            ace.setValueAndRankAndSuit(14, ace.getSuit());
             // sort again to place ace on top
             Collections.sort(cards);
         }

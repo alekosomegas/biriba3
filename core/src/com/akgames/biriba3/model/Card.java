@@ -6,7 +6,7 @@ package com.akgames.biriba3.model;
  * It can change in the case of wild cards
  */
 public class Card implements Comparable<Card> {
-    private int suit, rank, value, points;
+    private int suit, rank, value, initialValue, points;
     private String imageUrl;
     private final String[] verbose_suit = {"Diamond", "Club", "Heart", "Spade"};
     private final String[] verbose_rank = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
@@ -21,6 +21,7 @@ public class Card implements Comparable<Card> {
     // value is between 0-51, -1 for joker
     public Card(int value) {
         this.value = value;
+        this.initialValue = value;
         showFace = false;
         // Joker
         if (value == -1) {
@@ -30,10 +31,10 @@ public class Card implements Comparable<Card> {
             this.imageUrl = "joker.png";
         } else {
             this.suit = value / 13;
-            this.rank = value % 13;
+            this.rank = value % 13 +1;
             this.isJoker = false;
             this.imageUrl =
-                    (verbose_rank[rank] + verbose_suit[suit] + ".png").toLowerCase();
+                    (verbose_rank[rank -1] + verbose_suit[suit] + ".png").toLowerCase();
         }
 
         this.clickable = false;
@@ -58,7 +59,7 @@ public class Card implements Comparable<Card> {
 
     @Override
     public String toString(){
-        return isJoker ? "Joker" : verbose_suit[suit]+verbose_rank[rank%13];
+        return isJoker ? "Joker" : verbose_suit[suit]+verbose_rank[(rank -1) % 13 ];
     }
 
     public boolean isClickable() {
@@ -83,15 +84,16 @@ public class Card implements Comparable<Card> {
 
     /**
      *
-     * @return rank + 1
+     * @return rank
      */
     public int getRank() {
-        return rank +1;
+        return rank;
     }
 
 
-    public void setValueAndRank(int rank, int suit) {
-        this.rank = rank -1;
+    public void setValueAndRankAndSuit(int rank, int suit) {
+        this.rank = rank;
+        this.suit = suit;
         this.value = suit * 13 + rank -1;
     }
 
@@ -100,4 +102,33 @@ public class Card implements Comparable<Card> {
         return this.value - c.value;
     }
 
+    public void resetValues() {
+        this.value = initialValue;
+        if(this.isJoker) {
+            this.suit = -1;
+            this.rank = -1;
+        }else {
+            this.suit = value / 13;
+            this.rank = value % 13 +1;
+        }
+    }
+
+    public int getInitialValue() {
+        return initialValue;
+    }
+
+    public int getValue() {
+        return value;
+    }
+    //    @Override
+//    public boolean equals(Object obj) {
+//        if (obj == this) {
+//            return true;
+//        }
+//        if (!(obj instanceof Card)) {
+//            return false;
+//        }
+//        Card other = (Card) obj;
+//        return initialValue == other.initialValue;
+//    }
 }

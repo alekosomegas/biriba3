@@ -47,7 +47,7 @@ public class Board {
     }
 
     public List<Triti> getTrites(int team) {
-        return trites.get(team);
+        return trites.get(team % 2);
     }
 
     public void createBiribakia(List<Card> cards1, List<Card> cards2) {

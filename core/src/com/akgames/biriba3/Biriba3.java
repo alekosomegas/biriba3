@@ -5,8 +5,10 @@ import com.akgames.biriba3.controller.GameOptions;
 import com.akgames.biriba3.model.Board;
 import com.akgames.biriba3.view.GameScreen;
 import com.akgames.biriba3.view.MainMenuScreen;
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
 

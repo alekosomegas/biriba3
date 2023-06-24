@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameOptions {
-    public static final float[] CARD_SIZE = {150f, 225f};
+    public static final float[] CARD_SIZE = {225f, 337.5f};
     public static final int NUM_CARDS_PER_PLAYER = 11;
     public static final int NUM_CARDS_BIRIBAKI_1 = 11;
     public static final int NUM_CARDS_BIRIBAKI_2 = 11;

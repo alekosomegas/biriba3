@@ -43,13 +43,21 @@ public class CreateTritiTest {
         Assertions.assertNull(Triti.createTriti(new ArrayList<>(Arrays.asList(joker, joker, diamondSix))));
         // Three 2's
         Assertions.assertNull(Triti.createTriti(new ArrayList<>(Arrays.asList(diamondTwo, diamondTwo2, clubTwo))));
+    }
 
+    @Test
+    void duplicates() {
+        // 4-3-3
+        Assertions.assertNull(Triti.createTriti(new ArrayList<>(Arrays.asList(diamondFour, diamondThree, diamondThree))));
+        // Q-Q-2
+        Assertions.assertNull(Triti.createTriti(new ArrayList<>(Arrays.asList(clubQueen, clubQueen, clubTwo))));
     }
 
     @Test
     void NoJokersTriti() {
         // Same suit, sequential
         Assertions.assertNotNull(Triti.createTriti(new ArrayList<>(Arrays.asList(diamondSix, diamondFive, diamondSeven))));
+        Assertions.assertNotNull(Triti.createTriti(new ArrayList<>(Arrays.asList(diamondFour, diamondThree, diamondTwo, diamondAce))));
         // Same suit, not sequential
         Assertions.assertNull(Triti.createTriti(new ArrayList<>(Arrays.asList(diamondFive, diamondSeven, diamondNine))));
         // Sequential, different suit
@@ -128,6 +136,15 @@ public class CreateTritiTest {
         // Two 2s in a non-joker same suit triti and both 2s have different suit  (e.g. 2h-3d-2c-5d)
         Assertions.assertNull(Triti.createTriti(new ArrayList<>(Arrays.asList(heartTwo, diamondThree, clubTwo, diamondFive))));
 
+        triti = Triti.createTriti(new ArrayList<>(Arrays.asList(diamondFour, clubTwo, diamondTwo)));
+        Assertions.assertNotNull(triti);
+
+        // 3-2-2
+        clubTwo = new Card(1);
+        triti = Triti.createTriti(new ArrayList<>(Arrays.asList(diamondThree, diamondTwo2, clubTwo)));
+        Assertions.assertNotNull(triti);
+        Assertions.assertEquals(new ArrayList<>(Arrays.asList(3,2,1)),
+                triti.getCardsAsValues());
 
     }
 
@@ -166,6 +183,23 @@ public class CreateTritiTest {
         Assertions.assertNotNull(Triti.createTriti(new ArrayList<>(Arrays.asList(joker, diamondThree, diamondTwo, diamondAce))));
         // 2-3-2-A
         Assertions.assertNotNull(new ArrayList<>(Arrays.asList(clubTwo, diamondThree, diamondTwo, diamondAce)));
+
+        // J-2-A
+        triti = Triti.createTriti(new ArrayList<>(Arrays.asList(joker, diamondTwo, diamondAce)));
+        Assertions.assertNotNull(triti);
+        Assertions.assertEquals(new ArrayList<>(Arrays.asList(joker, diamondTwo, diamondAce)), triti.getCards());
+
+        // J-3-2-A
+        triti = Triti.createTriti(new ArrayList<>(Arrays.asList(joker, diamondThree, diamondTwo, diamondAce)));
+        Assertions.assertEquals(Arrays.asList(joker, diamondThree, diamondTwo, diamondAce),
+                triti.getCards());
+
+        // A-J-Q
+        triti = Triti.createTriti(new ArrayList<>(Arrays.asList(clubAce, joker, clubQueen)));
+        Assertions.assertNotNull(triti);
+        // A-2-Q
+        triti = Triti.createTriti(new ArrayList<>(Arrays.asList(clubAce, diamondTwo, clubQueen)));
+        Assertions.assertNotNull(triti);
     }
 
 

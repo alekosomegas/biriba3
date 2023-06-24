@@ -51,7 +51,6 @@ public class GameScreen extends ScreenAdapter {
         this.parentTable = new GroupParentTable(game);
         rootTable = new Table();
         rootTable.setFillParent(true);
-        rootTable.setDebug(true);
 
         Stack stack = new Stack();
         stack.add(parentTable);

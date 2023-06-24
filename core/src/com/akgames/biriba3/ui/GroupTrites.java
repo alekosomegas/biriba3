@@ -29,7 +29,7 @@ public class GroupTrites extends Table {
             tritiActors.add(tritiActor);
             add(tritiActor).space(5);
             i++;
-            if(i % 5 == 0) add().row();
+            if(i % 7 == 0) add().row();
         }
     }
 

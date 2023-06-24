@@ -46,7 +46,7 @@ public class DiscardsPileActor extends Stack {
             //TODO:this removes it from its previous parent. Perhaps no need to refresh stage?
             horizontalGroupList.get(currentRowIndex).addActor(new CardActor(card));
             horizontalGroupList.get(currentRowIndex).space(GameOptions.CARD_SIZE[0] * (-0.8f));
-            if(horizontalGroupList.get(currentRowIndex).getChildren().size > 6) {
+            if(horizontalGroupList.get(currentRowIndex).getChildren().size > 8) {
                 horizontalGroupList.add(new HorizontalGroup());
                 currentRowIndex = currentRowIndex + 1;
             }

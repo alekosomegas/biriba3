@@ -1,12 +1,19 @@
 package com.akgames.biriba3.actions;
 
-import com.akgames.biriba3.controller.GameLogic;
+import com.akgames.biriba3.controller.Turn;
 
 import java.util.List;
 
-public class EndRound implements PlayerAction{
+public class StartTurn implements PlayerAction{
+    Turn turnPhase;
+
+    public StartTurn() {
+        turnPhase = Turn.getInstance();
+    }
+
     @Override
     public void execute() {
+
     }
 
     @Override
@@ -21,6 +28,6 @@ public class EndRound implements PlayerAction{
 
     @Override
     public boolean allowed() {
-        return false;
+        return true;
     }
 }

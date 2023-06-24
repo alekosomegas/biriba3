@@ -48,6 +48,9 @@ public class DealAction implements PlayerAction {
 
         board.addToDiscardPile(deck.getTopCard().turn());
 
+        // TODO: to start a turn for first time, perhaps not needed
+        new StartTurn();
+
     }
 
     @Override
@@ -58,5 +61,10 @@ public class DealAction implements PlayerAction {
     @Override
     public void undo() {
 
+    }
+
+    @Override
+    public boolean allowed() {
+        return true;
     }
 }

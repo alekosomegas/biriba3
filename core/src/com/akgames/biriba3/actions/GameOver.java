@@ -1,12 +1,14 @@
 package com.akgames.biriba3.actions;
 
-import com.akgames.biriba3.controller.GameLogic;
+import com.badlogic.gdx.Gdx;
 
 import java.util.List;
 
-public class EndRound implements PlayerAction{
+public class GameOver implements PlayerAction{
     @Override
     public void execute() {
+        Gdx.app.log(getClass().getName(), "GAME OVER");
+
     }
 
     @Override
@@ -21,6 +23,6 @@ public class EndRound implements PlayerAction{
 
     @Override
     public boolean allowed() {
-        return false;
+        return true;
     }
 }

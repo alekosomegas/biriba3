@@ -16,9 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
 import java.util.Arrays;
 
@@ -54,7 +52,7 @@ public class GroupParentTable extends Table{
             public void changed(ChangeEvent event, Actor actor) {
                 gameLogic.handleAction(new EndTurn());}
         });
-
+        endTurn.setHeight(500f);
 
         createNewTriti = new TextButton("Create new Triti", GameOptions.SKIN);
         createNewTriti.addListener(new ChangeListener() {
@@ -86,11 +84,12 @@ public class GroupParentTable extends Table{
             add(mainPlayerHandActor).expandX().colspan(3);
         }
 
-        VerticalGroup verticalGroup = new VerticalGroup();
-        verticalGroup.addActor(endTurn);
-        verticalGroup.addActor(exitGameBtn);
-        verticalGroup.addActor(createNewTriti);
-        add(verticalGroup);
+        Table verticalGroup = new Table();
+        verticalGroup.add(endTurn).grow();
+//        verticalGroup.row();
+//        verticalGroup.add(exitGameBtn);
+        verticalGroup.add(createNewTriti).grow();
+        add(verticalGroup).grow().expandY().fillY();
 
         final DragAndDrop dragAndDrop = new DragAndDrop();
         setDragAndDrop(dragAndDrop);
@@ -139,7 +138,7 @@ public class GroupParentTable extends Table{
                 public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
                     CardActor cardActor = (CardActor)payload.getDragActor();
                     Card card = cardActor.getCard();
-                    GameLogic.getInstance().handleAction(new AddCardToDiscards(card));
+                    GameLogic.getInstance().handleAction(new ThrowCardToDiscards(card));
                 }
             });
             for(GroupTrites groupTrites : boardActor.getGroupTrites()) {
@@ -161,7 +160,7 @@ public class GroupParentTable extends Table{
     }
 
     private Cell<?> addPlayerBox(int index) {
-       return add(new PlayerBox(gameLogic.getPlayers().get(index))).expandX().fill();
+       return add(new PlayerBox(gameLogic.getPlayers().get(index))).expandX().fill().height(100f);
     }
 
 }

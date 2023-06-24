@@ -14,7 +14,7 @@ public class PlayerBox extends HorizontalGroup {
     public PlayerBox(Player player) {
         // Create labels for the player name and card count
         nameLabel = new Label(player.getName(), GameOptions.SKIN);
-        cardCountLabel = new Label("Cards: " + player.getHand().size(), GameOptions.SKIN);
+        cardCountLabel = new Label("Cards: " + player.getCardCount(), GameOptions.SKIN);
         this.playerHandActor = new PlayerHandActor(player);
 
         // Add the labels to the widget
