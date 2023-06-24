@@ -17,7 +17,7 @@ public class TakeBiribaki implements PlayerAction {
         GameLogic.getInstance().getCurrentPlayer().addToHand(biribaki);
         if(GameLogic.getInstance().getPlayers().indexOf(GameLogic.getInstance().getCurrentPlayer()) == 0) {
             for (Card card : biribaki) {
-                card.turn();
+                card.setShowFace(true);
                 card.setClickable(true);
             }
         }

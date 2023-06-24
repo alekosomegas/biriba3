@@ -7,6 +7,7 @@ import com.akgames.biriba3.controller.Turn;
 import com.badlogic.gdx.Gdx;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -25,8 +26,8 @@ public class PlayerAI extends  Player{
     public void act() {
         Random rand = new Random();
         // either 0 or 1
-        int randomNum = 0;
-        int randNumCard = rand.nextInt(getCardCount());
+        int decision = 0;
+
 
 
         // 1. Do discards hold a triti?
@@ -43,10 +44,11 @@ public class PlayerAI extends  Player{
         // TODO: this only checks one card against existing, need to check only discards and any combination of 2s against hand
 
         // if it can't find triti then pick from deck
-        if (!findTriti()) randomNum = 1;
+        if (!findTriti()) decision = 1;
 
-        if (randomNum == 0) {
+        if (decision == 0) {
             GameLogic.getInstance().handleAction(new PickDiscards());
+            // TODO: does nothing if case 4 returns true
             GameLogic.getInstance().handleAction(new CreateTritiAction(validCombination));
         } else {
             GameLogic.getInstance().handleAction(new PickFromDeck());
@@ -54,7 +56,9 @@ public class PlayerAI extends  Player{
 
 
         Turn.setCurrentPhaseTo(DISCARD);
-        GameLogic.getInstance().handleAction(new ThrowCardToDiscards(getHand().get(randNumCard).turn()));
+        // TODO: joker only as last resort
+        int randNumCard = rand.nextInt(getCardCount());
+        GameLogic.getInstance().handleAction(new ThrowCardToDiscards(getHand().get(randNumCard)));
         GameLogic.getInstance().handleAction(new EndTurn());
     }
 
@@ -63,12 +67,19 @@ public class PlayerAI extends  Player{
         this.groups = groupHandBySuit();
 
         // 4. Does one card from discards be added to existing triti?
-        // TODO: not working
         for (Card card : discards) {
             List<Triti> trites = GameLogic.getInstance().getBoard().getTrites(getTeamNumber());
             for (Triti triti : trites) {
                 if (triti.validateAddCard(card)) {
-                    triti.addCard(card);
+                    //TODO: Does not show face, ok now but refactor
+//                    card.setShowFace(true);
+//                    triti.addCard(card);
+//                    GameLogic.getInstance().getCurrentPlayer().removeCard(card);
+//                    GameLogic.getInstance().refreshUi();
+                    Gdx.app.log(getClass().getName(), card.isShowFace() + " " + card);
+                    GameLogic.getInstance().handleAction(new PickDiscards());
+                    // TODO: does nothing if case 4 returns true
+                    GameLogic.getInstance().handleAction(new AddCardToTriti(card, triti));
                     return true;
                 }
             }
@@ -146,31 +157,31 @@ public class PlayerAI extends  Player{
             i++;
         }
 //
-//        // try jokers, if no jokers try 2s
-//        if (jokers.size() > 0) {
-//            Card joker = jokers.get(0);
-//            List<Card> combination = Arrays.asList(joker, card);
-//            for (Card handCard : getHand()) {
-//                Gdx.app.log("Fails", joker.toString());
-//                combination.add(handCard);
-//                if(Triti.validate(combination)) {
-//                    validCombination = combination;
-//                    return true;
-//                }
-//            }
-//        }
-//        if (twos.size() > 0) {
-//            Card joker = twos.get(0);
-//            List<Card> combination = Arrays.asList(joker, card);
-//            for (Card handCard : getHand()) {
-//                Gdx.app.log("Fails 2", joker.toString());
-//                combination.add(handCard);
-//                if(Triti.validate(combination)) {
-//                    validCombination = combination;
-//                    return true;
-//                }
-//            }
-//        }
+        // try jokers, if no jokers try 2s
+        if (jokers.size() > 0) {
+            Card joker = jokers.get(0);
+            ArrayList<Card> combination = new ArrayList<>(Arrays.asList(joker, card));
+            for (Card handCard : getHand()) {
+                Gdx.app.log("Fails", joker.toString());
+                combination.add(handCard);
+                if(Triti.validate(combination)) {
+                    validCombination = combination;
+                    return true;
+                }
+            }
+        }
+        if (twos.size() > 0) {
+            Card joker = twos.get(0);
+            ArrayList<Card> combination = new ArrayList<>(Arrays.asList(joker, card));
+            for (Card handCard : getHand()) {
+                Gdx.app.log("Fails 2", joker.toString());
+                combination.add(handCard);
+                if(Triti.validate(combination)) {
+                    validCombination = combination;
+                    return true;
+                }
+            }
+        }
 
         return false;
     }

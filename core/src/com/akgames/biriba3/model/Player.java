@@ -79,7 +79,6 @@ public class Player {
     public void addDiscardedCards(List<Card> cards) {
         groups = groupHandBySuit();
         handDiscarded = cards;
-        Gdx.app.log(this.getName() + "dsae", String.valueOf(cards.size()));
         addToHand(cards);
     }
     public String getName() {

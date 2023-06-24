@@ -12,7 +12,7 @@ import java.util.List;
 public class Board {
     private List<Card> discardPile;
     // holds all the trites on the board
-    private List<List<Triti>> trites;
+    private ArrayList<ArrayList<Triti>> trites;
     private Deck deck;
     private List<Card> biribaki1;
     private List<Card> biribaki2;
@@ -47,7 +47,7 @@ public class Board {
     }
 
     public List<Triti> getTrites(int team) {
-        return trites.get(team % 2);
+        return trites.get(team);
     }
 
     public void createBiribakia(List<Card> cards1, List<Card> cards2) {

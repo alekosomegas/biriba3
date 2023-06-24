@@ -48,13 +48,11 @@ public class Card implements Comparable<Card> {
     public boolean isShowFace() {
         return showFace;
     }
-    public Card turn() {
-        showFace = !showFace;
-        return this;
-    }
 
-    public void setShowFace(boolean showFace) {
+
+    public Card setShowFace(boolean showFace) {
         this.showFace = showFace;
+        return this;
     }
 
     @Override

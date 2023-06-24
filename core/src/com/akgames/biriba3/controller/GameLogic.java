@@ -171,6 +171,7 @@ public class GameLogic implements PropertyChangeListener{
         this.currentPlayerHasThrownCard = currentPlayerHasThrownCard;
     }
 
+    // TODO: GAME OVER NOT WORKING
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (Objects.equals(evt.getPropertyName(), "Empty Hand")) {

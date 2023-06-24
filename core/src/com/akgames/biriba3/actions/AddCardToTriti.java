@@ -13,10 +13,33 @@ import java.util.List;
 import static com.akgames.biriba3.controller.Turn.TurnPhases.DISCARD;
 import static com.akgames.biriba3.controller.Turn.TurnPhases.TRITI;
 
+// TODO: CHECK FOR DUPLICATES
 public class AddCardToTriti implements PlayerAction{
+    private Card card;
+    private Triti triti;
+
+    public AddCardToTriti(Card card, Triti triti) {
+        this.card = card;
+        this.triti = triti;
+    }
+
+    public AddCardToTriti() {
+
+    }
+
     @Override
     public void execute() {
+        boolean success = triti.addCard(card);
 
+        if (success) {
+            GameLogic.getInstance().getCurrentPlayer().removeCard(card);
+            card.setShowFace(true);
+            // no need to do anything if in discard phase
+            if (Turn.CurrentPhase() == TRITI) {
+                // only if one of new cards involved
+                Turn.setCurrentPhaseTo(DISCARD);
+            }
+        }
     }
 
     @Override
@@ -32,7 +55,7 @@ public class AddCardToTriti implements PlayerAction{
 
         if (success) {
             GameLogic.getInstance().getCurrentPlayer().removeCard(card);
-
+            card.setShowFace(true);
             // no need to do anything if in discard phase
             if (Turn.CurrentPhase() == TRITI) {
                 // only if one of new cards involved

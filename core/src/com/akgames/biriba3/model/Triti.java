@@ -15,7 +15,7 @@ public class Triti {
     private Triti(ArrayList<Card> cards, Characteristics characteristics) {
         this.cards = cards;
         // team number starts at 1
-        this.team = GameLogic.getInstance().getCurrentPlayer().getTeamNumber()-1;
+        this.team = GameLogic.getInstance().getCurrentPlayer().getTeamNumber();
         this.suit = cards.get(0).getSuit();
         this.characteristics = characteristics;
     }
@@ -28,6 +28,11 @@ public class Triti {
             // TODO: needed here?
             checkAce(cards);
             return new Triti((ArrayList<Card>) cards, Characteristics.getCharacteristics());
+        }
+        for (Card tcard : cards) {
+            tcard.setSelected(false);
+            tcard.setClickable(false);
+            tcard.setShowFace(true);
         }
         return null;
     }

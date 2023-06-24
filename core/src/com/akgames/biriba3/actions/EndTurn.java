@@ -16,11 +16,15 @@ public class EndTurn implements PlayerAction{
 
     @Override
     public void execute() {
+        Gdx.app.log(this.toString(), "Executing End Turn. " +
+                "Turn phase : " + Turn.CurrentPhase() +
+                 "\nCurrent player: " + GameLogic.getInstance().getCurrentPlayer().getName());
         // start next turn before executing
         Turn.nextPhase();
 
+        // Next player turn starts
+        Gdx.app.log(this.toString(), "\nSTARTS NEW TURN\n");
         GameLogic.getInstance().nextPlayer();
-
         GameLogic.getInstance().getCurrentPlayer().act();
 
 

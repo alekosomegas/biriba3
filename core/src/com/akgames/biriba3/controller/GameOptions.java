@@ -127,9 +127,9 @@ public class GameOptions {
         for (PlayerTemp playerTemp : playersTemp) {
             if(playerTemp.active) {
                 Player player = playerTemp.isAi ?
-                        new PlayerAI(playerTemp.name, playerTemp.team)
+                        new PlayerAI(playerTemp.name, playerTemp.team -1)
                         :
-                        new Player(playerTemp.name, playerTemp.team);
+                        new Player(playerTemp.name, playerTemp.team -1);
 
                 players.add(player);
             }

@@ -21,7 +21,7 @@ public class PickFromDeck implements PlayerAction{
         Card card = gameLogic.getBoard().getDeck().getTopCard();
         tempCard = card;
         if(gameLogic.currentPlayerIndex == 0) {
-            card.turn();
+            card.setShowFace(true);
             card.setSelected(true);
             GameLogic.getInstance().getSelectedCards().add(card);
         }
