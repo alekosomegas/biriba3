@@ -1,6 +1,6 @@
 package com.akgames.biriba3;
 
-import com.akgames.biriba3.controller.GameLogic;
+import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.controller.GameOptions;
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.model.Triti;
@@ -9,10 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class AddCardsToTritiTest {
-    GameLogic gameLogic = GameLogic.getInstance();
+    GameController gameLogic = GameController.getInstance();
     GameOptions gameOptions = gameLogic.gameOptions;
     boolean startGame = gameOptions.createPlayers();
 
