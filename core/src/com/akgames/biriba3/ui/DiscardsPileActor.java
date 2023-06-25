@@ -1,5 +1,6 @@
 package com.akgames.biriba3.ui;
 
+import com.akgames.biriba3.Utils;
 import com.akgames.biriba3.actions.PickDiscards;
 import com.akgames.biriba3.controller.GameLogic;
 import com.akgames.biriba3.controller.GameOptions;
@@ -15,10 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
-import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
@@ -27,11 +25,11 @@ import com.ibm.j9ddr.vm29.structure.CardAction;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiscardsPileActor extends Stack {
+import static com.akgames.biriba3.controller.GameOptions.*;
+
+public class DiscardsPileActor extends Table {
     private List<Card> discardPile;
     private List<HorizontalGroup> horizontalGroupList;
-
-    private Image backgroundImage;
     private VerticalGroup cardRows;
 
 
@@ -44,9 +42,9 @@ public class DiscardsPileActor extends Stack {
 
         for (Card card : discardPile) {
             //TODO:this removes it from its previous parent. Perhaps no need to refresh stage?
-            horizontalGroupList.get(currentRowIndex).addActor(new CardActor(card));
-            horizontalGroupList.get(currentRowIndex).space(GameOptions.CARD_SIZE[0] * (-0.8f));
-            if(horizontalGroupList.get(currentRowIndex).getChildren().size > 8) {
+            horizontalGroupList.get(currentRowIndex).addActor(new CardActor(card, CARD_SIZE_SM[0], CARD_SIZE_SM[1]));
+            horizontalGroupList.get(currentRowIndex).space(CARD_SIZE_SM[0] * (-0.8f));
+            if(horizontalGroupList.get(currentRowIndex).getChildren().size > 35) {
                 horizontalGroupList.add(new HorizontalGroup());
                 currentRowIndex = currentRowIndex + 1;
             }
@@ -67,15 +65,12 @@ public class DiscardsPileActor extends Stack {
 
 
         // Create a new background image
-        TextureRegion backgroundRegion = new TextureRegion(new Texture("badlogic.jpg"));
-        backgroundImage = new Image(backgroundRegion);
 
+        Utils.setBackground(this, BG_COLOR);
 
         // Add the background image to the group
-        addActor(backgroundImage);
-        addActor(cardRows);
-
-
+        add(cardRows);
+        pad(50);
 
     }
 

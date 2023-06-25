@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import javax.swing.event.MouseInputListener;
+
 
 /**
  * Responsible for drawing the card and handling input events
@@ -21,15 +23,14 @@ public class CardActor extends Actor {
     private TextureRegion cardImage;
     private float width, height;
 
-
-    public CardActor(final Card card) {
+    public CardActor(final Card card, float width, float height) {
         this.card = card;
         Texture texture = new Texture(
                 Gdx.files.internal("assets/cardImgs/" +
                         (card.isShowFace() ? card.getImageUrl() : "back.png")));
-        cardImage = new TextureRegion(texture);
-        this.width = GameOptions.CARD_SIZE[0];
-        this.height = GameOptions.CARD_SIZE[1];
+        this.cardImage = new TextureRegion(texture);
+        this.width = width;
+        this.height = height;
         this.setBounds(getX(), getY(), width, height);
 
         this.addListener(new ClickListener(Input.Buttons.RIGHT) {
@@ -45,6 +46,24 @@ public class CardActor extends Actor {
                 }
             }
         });
+
+        this.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                Gdx.app.log("Hover", "Mouse entered");
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+
+                Gdx.app.log("Hover", "Mouse exited");
+            }
+        });
+    }
+
+    public CardActor(final Card card) {
+        this(card, GameOptions.CARD_SIZE[0], GameOptions.CARD_SIZE[1]);
+
     }
 
     @Override

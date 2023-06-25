@@ -1,5 +1,6 @@
 package com.akgames.biriba3.view;
 
+import com.akgames.biriba3.Utils;
 import com.akgames.biriba3.model.Board;
 import com.akgames.biriba3.controller.GameLogic;
 import com.akgames.biriba3.controller.GameOptions;
@@ -7,12 +8,15 @@ import com.akgames.biriba3.ui.BiribakiaActor;
 import com.akgames.biriba3.ui.DiscardsPileActor;
 import com.akgames.biriba3.ui.GroupTrites;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.utils.Align;
 
+import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -60,15 +64,25 @@ public class BoardActor extends Table implements PropertyChangeListener {
         DeckVGroup.addActor(deckActor);
         DeckVGroup.addActor(RemainingCardsHGroup);
 
-        int numBiribakia = board.getNumBiribakia();
-        add(biribakiaActor).size(GameOptions.CARD_SIZE[numBiribakia == 2 ? 1 : 0], GameOptions.CARD_SIZE[1]).left();
-        add(discardsPileActor).left();
+        float sw = Gdx.graphics.getWidth();
+        float sh = Gdx.graphics.getHeight();
 
-        add(DeckVGroup).top().right().expand();
-        add().row();
+        int numBiribakia = board.getNumBiribakia();
+        add(biribakiaActor).size(GameOptions.CARD_SIZE[numBiribakia == 2 ? 1 : 0], GameOptions.CARD_SIZE[1]).
+                left();
+        add(discardsPileActor).center().grow().width(sw/3);
+
+        add(DeckVGroup).top().right();
+        row();
+
+        Table tritesTable = new Table();
         for (GroupTrites groupTriti : groupTrites) {
-            add(groupTriti).prefWidth(Gdx.graphics.getWidth()/2.2f).prefHeight(Gdx.graphics.getHeight()/3f);
+            tritesTable.add(groupTriti).left().top().prefSize(sw/2, sh/2).grow().space(50);
+            Utils.setBackground(groupTriti, new Color(0.1f,0.1f,0.1f,0.5f));
         }
+
+        add(tritesTable).colspan(3).grow().pad(40);
+
 
     }
 

@@ -1,14 +1,20 @@
 package com.akgames.biriba3.ui;
 
 import com.akgames.biriba3.Biriba3;
+import com.akgames.biriba3.Utils;
 import com.akgames.biriba3.actions.*;
 import com.akgames.biriba3.controller.GameLogic;
 import com.akgames.biriba3.controller.GameOptions;
 import com.akgames.biriba3.model.Card;
+import com.akgames.biriba3.model.Player;
 import com.akgames.biriba3.view.BoardActor;
 import com.akgames.biriba3.view.CardActor;
 import com.akgames.biriba3.view.PlayerHandActor;
 import com.akgames.biriba3.view.TritiActor;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
@@ -17,8 +23,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 
+import javax.swing.*;
 import java.util.Arrays;
+
+import static com.akgames.biriba3.controller.GameOptions.BG_COLOR;
+import static com.akgames.biriba3.controller.GameOptions.CARD_SIZE_LG;
 
 public class GroupParentTable extends Table{
 
@@ -46,6 +59,14 @@ public class GroupParentTable extends Table{
             }
         });
 
+        TextButton saveGameBtn = new TextButton(("Save Game"), GameOptions.SKIN);
+        saveGameBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // TODO: save gamme
+            }
+        });
+
         endTurn = new TextButton("End round", GameOptions.SKIN);
         endTurn.addListener(new ChangeListener() {
             @Override
@@ -54,7 +75,7 @@ public class GroupParentTable extends Table{
         });
         endTurn.setHeight(500f);
 
-        createNewTriti = new TextButton("Create new Triti", GameOptions.SKIN);
+        createNewTriti = new TextButton("Create\nTriti", GameOptions.SKIN);
         createNewTriti.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -62,38 +83,85 @@ public class GroupParentTable extends Table{
             }
         });
 
+        TextButton undoBtn = new TextButton("Undo", GameOptions.SKIN);
+        undoBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // TODO: undo
+            }
+        });
+
+        Table controlsTable = new Table();
+        controlsTable.defaults().pad(20);
+        Table leftTable = new Table();
+        leftTable.defaults().space(20).width(100);
+        leftTable.add(createNewTriti).grow();
+        leftTable.row();
+        leftTable.add(undoBtn).grow();
+        controlsTable.add(leftTable).grow();
+        Table rightTable = new Table();
+        rightTable.add(endTurn).grow().width(100);
+        controlsTable.add(rightTable).grow();
+
+        Table gameControlsTable = new Table();
+        gameControlsTable.defaults().space(20).width(100).padRight(140);
+        gameControlsTable.add(saveGameBtn).grow();
+        gameControlsTable.row();
+        gameControlsTable.add(exitGameBtn).grow();
+
+        Table bottomRowTable = new Table();
+        bottomRowTable.padTop(50).padBottom(50).padLeft(20).padRight(20);
+        bottomRowTable.add(gameControlsTable).growY();
+        bottomRowTable.add(mainPlayerHandActor).width(mainPlayerHandActor.getWidth()).grow().center();
+        bottomRowTable.add(controlsTable).growY();
+
+
+        Table topRowTable = new Table();
+        topRowTable.defaults().padTop(50).padBottom(50).padLeft(20).padRight(20);
+
+        Utils.setBackground(bottomRowTable, BG_COLOR);
+        Utils.setBackground(topRowTable, BG_COLOR);
+        Utils.setBackground(this, BG_COLOR);
 
         if(gameLogic.getNumOfPlayers() == 2) {
-            addPlayerBox(1).colspan(3);
+            PlayerBox p1 = new PlayerBox(gameLogic.getPlayers().get(1));
+            topRowTable.add(p1);
+            add(topRowTable).center().top().grow().height(p1.getHeight() + 100);
             row();
-            add(boardActor).pad(150);
+            add(boardActor).pad(50);
             row();
-            add(mainPlayerHandActor);
+            add(bottomRowTable).grow().height(mainPlayerHandActor.getHeight() + 100);
         } else {
             defaults().pad(10);
-            addPlayerBox(2);
+            PlayerBox p1 = new PlayerBox(gameLogic.getPlayers().get(1));
+            topRowTable.add(p1).center().width(p1.getWidth()).grow();
+            PlayerBox p2 = new PlayerBox(gameLogic.getPlayers().get(2));
+            topRowTable.add(p2).center().grow().width(p2.getWidth());
+            if (gameLogic.getNumOfPlayers() == 4) {
+                PlayerBox p3 = new PlayerBox(gameLogic.getPlayers().get(3));
+                topRowTable.add(p3).center().grow().width(p3.getWidth());
+            }
+            topRowTable.padLeft(25).padRight(25);
+            add(topRowTable).center().top().grow();
             row();
-            addPlayerBox(1);
             add(boardActor).pad(50);
 
-            if (gameLogic.getNumOfPlayers() == 4) {
-                addPlayerBox(3);
-            }
-
             row();
-            add(mainPlayerHandActor).expandX().colspan(3);
+            add(bottomRowTable).grow();
         }
 
-        Table verticalGroup = new Table();
-        verticalGroup.add(endTurn).grow();
-//        verticalGroup.row();
-//        verticalGroup.add(exitGameBtn);
-        verticalGroup.add(createNewTriti).grow();
-        add(verticalGroup).grow().expandY().fillY();
 
         final DragAndDrop dragAndDrop = new DragAndDrop();
         setDragAndDrop(dragAndDrop);
     }
+
+    private Cell<?> addPlayerBox(int index) {
+        PlayerBox playerBox = new PlayerBox(gameLogic.getPlayers().get(index));
+        return add(playerBox).grow().width(playerBox.getWidth()).height(playerBox.getHeight());
+    }
+
+
+
 
     private void setDragAndDrop(final DragAndDrop dragAndDrop) {
         for (final CardActor cardActor : mainPlayerHandActor.getHand()) {
@@ -159,8 +227,6 @@ public class GroupParentTable extends Table{
         }
     }
 
-    private Cell<?> addPlayerBox(int index) {
-       return add(new PlayerBox(gameLogic.getPlayers().get(index))).expandX().fill().height(100f);
-    }
+
 
 }

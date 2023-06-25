@@ -32,14 +32,14 @@ public class PickFromDeck implements PlayerAction{
 
     @Override
     public void execute(List<?> params) {
-        GameLogic.getInstance().setCurrentPlayerHasThrownCard(false);
+        gameLogic.setCurrentPlayerHasThrownCard(false);
 
     }
 
     @Override
     public void undo() {
         gameLogic.getBoard().getDeck().addCard(tempCard);
-        //TODO: refactor
+        //TODO: refactor , no undo allowed
         gameLogic.getPlayers().get(gameLogic.currentPlayerIndex).removeCard(tempCard);
     }
 

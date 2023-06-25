@@ -4,6 +4,8 @@ import com.akgames.biriba3.controller.Turn;
 
 import java.util.List;
 
+// TODO: start -> new start Turn -> Deal cards
+
 public class StartTurn implements PlayerAction{
     Turn turnPhase;
 

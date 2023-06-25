@@ -14,6 +14,7 @@ import java.util.Random;
 import static com.akgames.biriba3.controller.Turn.TurnPhases.DISCARD;
 
 //TODO: chose Actions at random
+// TODO: add weights to decisions
 public class PlayerAI extends  Player{
     List<Card> validCombination;
 

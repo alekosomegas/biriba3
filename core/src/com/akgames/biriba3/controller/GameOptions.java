@@ -2,6 +2,8 @@ package com.akgames.biriba3.controller;
 
 import com.akgames.biriba3.model.Player;
 import com.akgames.biriba3.model.PlayerAI;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import java.beans.PropertyChangeListener;
@@ -10,10 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameOptions {
-    public static final float[] CARD_SIZE = {225f, 337.5f};
+
+//    // TODO change card size according to screen size
+//    float sw = Gdx.graphics.getWidth();
+//    float sh = Gdx.graphics.getHeight();
+
+    public static final float[] CARD_SIZE = {180f, 270f};
+    public static final float[] CARD_SIZE_SM = {CARD_SIZE[0] * 0.8f, CARD_SIZE[1] * 0.8f};
+    public static final float[] CARD_SIZE_LG = {CARD_SIZE[0] * 1.2f, CARD_SIZE[1] * 1.2f};
     public static final int NUM_CARDS_PER_PLAYER = 11;
     public static final int NUM_CARDS_BIRIBAKI_1 = 11;
     public static final int NUM_CARDS_BIRIBAKI_2 = 11;
+    public static final Color BG_COLOR = new Color(0.1f,0.1f,0.1f,0.5f);
     public static Skin SKIN;
 
     private class PlayerTemp {

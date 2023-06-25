@@ -83,6 +83,8 @@ public class GameLogic implements PropertyChangeListener{
             player.addPropertyChangeListener(this);
         }
         this.board = new Board(numOfTeams);
+
+        board.getDeck().addPropertyChangeListener(this);
     }
 
     public int getNumOfTeams() {
@@ -171,7 +173,6 @@ public class GameLogic implements PropertyChangeListener{
         this.currentPlayerHasThrownCard = currentPlayerHasThrownCard;
     }
 
-    // TODO: GAME OVER NOT WORKING
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (Objects.equals(evt.getPropertyName(), "Empty Hand")) {
@@ -184,6 +185,12 @@ public class GameLogic implements PropertyChangeListener{
                 Turn.setCurrentPhaseTo(BIRIBAKI_END);
             } else {
                 Turn.setCurrentPhaseTo(BIRIBAKI_PLAY);
+            }
+        }
+
+        if (Objects.equals(evt.getPropertyName(), "Deck Size Changed")) {
+            if(Objects.equals(evt.getNewValue(), 0)) {
+                handleAction(new GameOver());
             }
         }
     }

@@ -14,6 +14,8 @@ import static com.akgames.biriba3.controller.Turn.TurnPhases.DISCARD;
 import static com.akgames.biriba3.controller.Turn.TurnPhases.TRITI;
 
 // TODO: CHECK FOR DUPLICATES
+
+// TODO: PREVENT other players from adding cards
 public class AddCardToTriti implements PlayerAction{
     private Card card;
     private Triti triti;

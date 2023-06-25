@@ -46,7 +46,9 @@ public class DealAction implements PlayerAction {
 
         board.createBiribakia(cards1, cards2);
 
+
         board.addToDiscardPile(deck.getTopCard().setShowFace(true));
+
 
         // TODO: to start a turn for first time, perhaps not needed
         new StartTurn();
