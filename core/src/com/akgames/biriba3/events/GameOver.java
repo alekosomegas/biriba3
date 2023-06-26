@@ -1,10 +1,8 @@
-package com.akgames.biriba3.actions;
+package com.akgames.biriba3.events;
 
 import com.badlogic.gdx.Gdx;
 
-import java.util.List;
-
-public class GameOver implements PlayerAction {
+public class GameOver implements GameEvent {
 	@Override
 	public void execute() {
 		Gdx.app.log(getClass().getName(), "GAME OVER");
@@ -12,13 +10,8 @@ public class GameOver implements PlayerAction {
 	}
 	
 	@Override
-	public void execute(List<?> params) {
-	
-	}
-	
-	@Override
 	public void undo() {
-	
+		// No undo
 	}
 	
 	@Override

@@ -1,11 +1,11 @@
 package com.akgames.biriba3.ui;
 
 import com.akgames.biriba3.Biriba3;
-import com.akgames.biriba3.actions.Utils.Utils;
-import com.akgames.biriba3.actions.AddCardToTriti;
-import com.akgames.biriba3.actions.CreateTritiAction;
-import com.akgames.biriba3.actions.EndTurn;
-import com.akgames.biriba3.actions.ThrowCardToDiscards;
+import com.akgames.biriba3.Utils.Utils;
+import com.akgames.biriba3.events.AddCardToTriti;
+import com.akgames.biriba3.events.CreateTritiAction;
+import com.akgames.biriba3.events.EndTurn;
+import com.akgames.biriba3.events.ThrowCardToDiscards;
 import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.controller.GameOptions;
 import com.akgames.biriba3.model.Card;
@@ -19,8 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
-
-import java.util.Arrays;
 
 import static com.akgames.biriba3.controller.GameOptions.BG_COLOR;
 
@@ -138,7 +136,9 @@ public class GameUI extends Table {
 					
 					@Override
 					public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
-						gameLogic.handleAction(new AddCardToTriti(), Arrays.asList(payload, triti));
+						CardActor cardActor = (CardActor) payload.getDragActor();
+						Card card = cardActor.getCard();
+						gameLogic.handleAction(new AddCardToTriti(card, triti.getTriti()));
 					}
 				});
 			}

@@ -1,6 +1,6 @@
 package com.akgames.biriba3.view;
 
-import com.akgames.biriba3.actions.PickFromDeck;
+import com.akgames.biriba3.events.PickFromDeck;
 import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.controller.GameOptions;
 import com.akgames.biriba3.model.Deck;

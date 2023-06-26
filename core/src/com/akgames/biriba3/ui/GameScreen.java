@@ -1,7 +1,7 @@
 package com.akgames.biriba3.ui;
 
 import com.akgames.biriba3.Biriba3;
-import com.akgames.biriba3.actions.StartGame;
+import com.akgames.biriba3.events.StartGame;
 import com.akgames.biriba3.controller.GameOptions;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;

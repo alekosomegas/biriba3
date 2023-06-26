@@ -1,6 +1,6 @@
 package com.akgames.biriba3.view;
 
-import com.akgames.biriba3.actions.TakeBiribaki;
+import com.akgames.biriba3.events.TakeBiribaki;
 import com.akgames.biriba3.controller.GameController;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;

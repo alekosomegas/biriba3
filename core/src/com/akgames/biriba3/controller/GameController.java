@@ -1,7 +1,7 @@
 package com.akgames.biriba3.controller;
 
-import com.akgames.biriba3.actions.GameOver;
-import com.akgames.biriba3.actions.PlayerAction;
+import com.akgames.biriba3.events.GameEvent;
+import com.akgames.biriba3.events.GameOver;
 import com.akgames.biriba3.model.Board;
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.model.Player;
@@ -26,7 +26,7 @@ public class GameController implements PropertyChangeListener {
 	private static GameController instance;
 	public GameOptions gameOptions;
 	public int currentPlayerIndex;
-	private List<PlayerAction> playerActionsQueue;
+	private List<GameEvent> playerActionsQueue;
 	private List<Player> players;
 	private Board board;
 	private GameScreen gameScreen;
@@ -34,7 +34,6 @@ public class GameController implements PropertyChangeListener {
 	private boolean gameOver;
 	private int numOfTeams;
 	private PlayerHandActor mainPlayerHandActor;
-	private boolean selectCardsActive;
 	private List<Card> selectedCards;
 	private boolean currentPlayerHasThrownCard;
 	
@@ -47,10 +46,9 @@ public class GameController implements PropertyChangeListener {
 		this.gameOver = false;
 		this.selectedCards = new ArrayList<>();
 		this.currentPlayerHasThrownCard = false;
-		support = new PropertyChangeSupport(this);
+		this.support = new PropertyChangeSupport(this);
 		
 	}
-	
 	
 	public static GameController getInstance() {
 		if(instance == null) {
@@ -75,13 +73,11 @@ public class GameController implements PropertyChangeListener {
 	public void setUpGame(List<Player> players) {
 		this.numOfTeams = players.size() == 3 ? 3 : 2;
 		this.players = players;
-		
 		// Add this as listener for each player. Listens for empty hand
 		for(Player player : players) {
 			player.addPropertyChangeListener(this);
 		}
 		this.board = new Board(numOfTeams);
-		
 		board.getDeck().addPropertyChangeListener(this);
 	}
 	
@@ -99,15 +95,6 @@ public class GameController implements PropertyChangeListener {
 	
 	public int getNumOfPlayers() {
 		return players.size();
-	}
-	
-	// TODO: remove
-	public void handleAction(PlayerAction playerAction, List<?> params) {
-		if(!playerAction.allowed()) return;
-		//        playerActionsQueue.add(playerAction);
-		playerAction.execute(params);
-		// refresh screen
-		gameScreen.show();
 	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -128,14 +115,6 @@ public class GameController implements PropertyChangeListener {
 	
 	public void setMainPlayerHandActor(PlayerHandActor mainPlayerHandActor) {
 		this.mainPlayerHandActor = mainPlayerHandActor;
-	}
-	
-	public boolean isSelectCardsActive() {
-		return selectCardsActive;
-	}
-	
-	public void setSelectCardsActive(boolean selectCardsActive) {
-		this.selectCardsActive = selectCardsActive;
 	}
 	
 	public void refreshUi() {
@@ -165,13 +144,13 @@ public class GameController implements PropertyChangeListener {
 				handleAction(new GameOver());
 				return;
 			}
-			
 			if(currentPlayerHasThrownCard) {
 				Turn.setCurrentPhaseTo(BIRIBAKI_END);
 			} else {
 				Turn.setCurrentPhaseTo(BIRIBAKI_PLAY);
 			}
 		}
+		
 		// End the game if only 2 cards left in deck
 		// TODO: after the current turn finishes
 		if(Objects.equals(evt.getPropertyName(), "Deck Size Changed")) {
@@ -185,7 +164,7 @@ public class GameController implements PropertyChangeListener {
 		return players.get(currentPlayerIndex);
 	}
 	
-	public void handleAction(PlayerAction playerAction) {
+	public void handleAction(GameEvent playerAction) {
 		Gdx.app.log(this.getClass().getName(), "\n\tCurrent Player: " + getCurrentPlayer().getName() + "\n\tTurn Phase: " + Turn.CurrentPhase() + " \n\tAction: " + playerAction.getClass().getName());
 		
 		if(!playerAction.allowed()) return;

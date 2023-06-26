@@ -7,21 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Responsible for creating the Deck
+ * Responsible for creating and modeling the Deck, the discards pile, trites and biribakia.
  */
 public class Board {
-	private List<Card> discardPile;
+	private final List<Card> discardPile;
 	// holds all the trites on the board
-	private ArrayList<ArrayList<Triti>> trites;
-	private Deck deck;
+	private final ArrayList<ArrayList<Triti>> trites;
+	private final Deck deck;
 	private List<Card> biribaki1;
 	private List<Card> biribaki2;
 	private int numBiribakia;
 	
 	public Board(int numTeams) {
-		deck = new Deck();
-		discardPile = new ArrayList<>();
-		trites = new ArrayList<>(numTeams);
+		this.deck = new Deck();
+		this.discardPile = new ArrayList<>();
+		this.trites = new ArrayList<>(numTeams);
 		for(int i = 0; i < numTeams; i++) {
 			trites.add(new ArrayList<Triti>());
 		}

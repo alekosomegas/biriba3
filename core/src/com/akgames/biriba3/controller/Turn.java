@@ -1,19 +1,30 @@
 package com.akgames.biriba3.controller;
 
 /**
- * PICK     - Either pick a card from the deck or pick all the discarded cards. TRITI    - (Only when picking discarded)
- * Must use one of the cards in a triti. DISCARD  - Must discard a card and allowed to create trites. END      - Can end
- * turn BIRIBAKI - Can take biribaki
- * <p>
- * case 1: has 1 or x card, picks 1, uses both in a triti takes biribaki, is allowed to create triti and must discard
- * case 2: has 1 or x card, picks 1, uses all but one in triti discards card, Takes biribaki, not allowed to use triti
- * ends turn
+ * State of players turn.
+ * <ul>
+ *
+ *
+ * <br>
+ * PICK     - Either pick a card from the deck or pick all the discarded cards.
+ * <br>
+ * TRITI    - (Only when picking discarded). Must use one of the cards in a triti.
+ * <br>
+ * DISCARD  - Must discard a card and allowed to create trites.
+ * <br>
+ * BIRIBAKI_PLAY - Can take biribaki. Has 1 or x card, picks 1, uses both in a triti takes biribaki,
+ * is allowed to create triti and must discard.
+ * <br>
+ * BIRIBAKI_END -  has 1 or x card, picks 1, uses all but one in triti discards card, Takes biribaki,
+ * not allowed to use triti.
+ * <br>
+ * END      - Can end turn
+ * </ul>
  */
 public class Turn {
 	private static TurnPhases current;
-	
-	;
 	private static Turn instance = null;
+	
 	private Turn() {
 		current = TurnPhases.PICK;
 	}
@@ -38,7 +49,6 @@ public class Turn {
 				current = TurnPhases.PICK;
 				break;
 		}
-		
 	}
 	
 	public static TurnPhases CurrentPhase() {

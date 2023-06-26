@@ -1,22 +1,18 @@
-package com.akgames.biriba3.actions;
+package com.akgames.biriba3.events;
 
 import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.model.Card;
 
 import java.util.List;
 
-public class EndRound implements PlayerAction {
+public class EndRound implements GameEvent {
 	@Override
 	public void execute() {
-		for(Card card : GameController.getInstance().getCurrentPlayer().getHand()) {
+		// Clear selected cards
+		for(Card card : GAME_CONTROLLER.getCurrentPlayer().getHand()) {
 			card.setSelected(false);
 		}
-		GameController.getInstance().getSelectedCards().clear();
-	}
-	
-	@Override
-	public void execute(List<?> params) {
-	
+		GAME_CONTROLLER.getSelectedCards().clear();
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package com.akgames.biriba3.actions;
+package com.akgames.biriba3.events;
 
 import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.model.Board;
@@ -11,14 +11,13 @@ import java.util.List;
 
 import static com.akgames.biriba3.controller.GameOptions.*;
 
-public class DealAction implements PlayerAction {
-	private Board board;
-	private Deck deck;
-	private List<Player> players;
-	private GameController gameLogic;
+public class DealAction implements GameEvent {
+	private final Board board;
+	private final Deck deck;
+	private final List<Player> players;
 	
 	public DealAction() {
-		this.gameLogic = GameController.getInstance();
+		GameController gameLogic = GameController.getInstance();
 		this.board = gameLogic.getBoard();
 		this.deck = gameLogic.getBoard().getDeck();
 		this.players = gameLogic.getPlayers();
@@ -45,21 +44,11 @@ public class DealAction implements PlayerAction {
 		}
 		
 		board.createBiribakia(cards1, cards2);
-		
-		
 		board.addToDiscardPile(deck.getTopCard().setShowFace(true));
-		
-		
-	}
-	
-	@Override
-	public void execute(List<?> params) {
-	
 	}
 	
 	@Override
 	public void undo() {
-	
 	}
 	
 	@Override

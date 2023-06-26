@@ -1,6 +1,6 @@
 package com.akgames.biriba3.model;
 
-import com.akgames.biriba3.actions.Utils.CheckTriti;
+import com.akgames.biriba3.Utils.CheckTriti;
 import com.akgames.biriba3.controller.GameController;
 
 import java.util.ArrayList;
@@ -144,6 +144,11 @@ public class Triti {
 		// The temporary cards became the cards of the triti
 		cards = tempTritiCards;
 		cards.sort(Collections.<Card>reverseOrder());
+		for (Card tempCard : cards) {
+			tempCard.setShowFace(true);
+			tempCard.setSelected(false);
+			tempCard.setClickable(false);
+		}
 		
 		return true;
 	}

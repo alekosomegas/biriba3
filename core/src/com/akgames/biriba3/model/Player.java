@@ -10,31 +10,30 @@ import java.util.Collections;
 import java.util.List;
 
 public class Player {
+	private final int teamNumber;
+	private final PropertyChangeSupport support;
 	protected List<Card> handDiscarded;
 	protected List<List<Card>> groups;
 	protected List<Card> jokers;
 	protected List<Card> twos;
-	// playerindex?
+	protected GameController gameController;
 	private List<Card> hand;
 	private int score;
 	private int penaltyPoints;
 	private String name;
-	private int teamNumber;
-	private PropertyChangeSupport support;
 	private boolean hasTakenBiribaki;
 	
 	public Player(String name, int teamNumber) {
+		this.gameController = GameController.getInstance();
 		this.hand = new ArrayList<>();
 		this.handDiscarded = new ArrayList<>();
 		this.groups = new ArrayList<>();
 		this.jokers = new ArrayList<>();
-		;
 		this.twos = new ArrayList<>();
-		;
 		this.name = name;
 		this.teamNumber = teamNumber;
 		this.hasTakenBiribaki = false;
-		support = new PropertyChangeSupport(this);
+		this.support = new PropertyChangeSupport(this);
 	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -62,8 +61,7 @@ public class Player {
 	}
 	
 	public void addToHand(Card card) {
-		// TODO: check if works
-		if(GameController.getInstance().currentPlayerIndex == 0) card.setClickable(true);
+		if(gameController.currentPlayerIndex == 0) card.setClickable(true);
 		hand.add(card);
 		Collections.sort(hand);
 	}
@@ -74,13 +72,12 @@ public class Player {
 		addToHand(cards);
 	}
 	
-	//TODO: use that instead of Collections.sort and then display separately for main player
+	//TODO: use this instead of Collections.sort and then display separately for main player
 	List<List<Card>> groupHandBySuit() {
 		List<Card> diamonds = new ArrayList<>();
 		List<Card> clubs = new ArrayList<>();
 		List<Card> hearts = new ArrayList<>();
 		List<Card> spades = new ArrayList<>();
-		
 		
 		groups = new ArrayList<>(Arrays.asList(diamonds, clubs, hearts, spades));
 		
@@ -102,7 +99,6 @@ public class Player {
 		Collections.sort(hand);
 	}
 	
-	// TODO: should this return a copy and be protected, the hand wont be able change?
 	public List<Card> getHand() {
 		return hand;
 	}

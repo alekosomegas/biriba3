@@ -1,11 +1,9 @@
-package com.akgames.biriba3.actions;
+package com.akgames.biriba3.events;
 
 import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.controller.Turn;
 
-import java.util.List;
-
-public class StartGame implements PlayerAction {
+public class StartGame implements GameEvent {
 	Turn turnPhase;
 	
 	public StartGame() {
@@ -17,11 +15,6 @@ public class StartGame implements PlayerAction {
 	
 	@Override
 	public void execute() {
-	
-	}
-	
-	@Override
-	public void execute(List<?> params) {
 	
 	}
 	

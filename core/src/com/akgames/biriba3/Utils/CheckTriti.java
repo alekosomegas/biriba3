@@ -1,4 +1,4 @@
-package com.akgames.biriba3.actions.Utils;
+package com.akgames.biriba3.Utils;
 
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.model.Triti;

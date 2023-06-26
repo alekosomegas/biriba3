@@ -1,20 +1,13 @@
-package com.akgames.biriba3.actions;
+package com.akgames.biriba3.events;
 
 import com.akgames.biriba3.controller.GameController;
 
-import java.util.List;
-
 // TODO: rename
 // TODO: perhaps no need to overload. can use constructor
-public interface PlayerAction {
+public interface GameEvent {
 	
-	GameController gamelogic = GameController.getInstance();
-	
+	GameController GAME_CONTROLLER = GameController.getInstance();
 	public void execute();
-	
-	public void execute(List<?> params);
-	
 	public void undo();
-	
 	boolean allowed();
 }

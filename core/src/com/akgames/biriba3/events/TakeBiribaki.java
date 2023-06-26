@@ -1,6 +1,5 @@
-package com.akgames.biriba3.actions;
+package com.akgames.biriba3.events;
 
-import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.controller.Turn;
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.model.Player;
@@ -9,18 +8,17 @@ import java.util.List;
 
 import static com.akgames.biriba3.controller.Turn.TurnPhases.*;
 
-public class TakeBiribaki implements PlayerAction {
-	Player player = GameController.getInstance().getCurrentPlayer();
+public class TakeBiribaki implements GameEvent {
+	Player player = GAME_CONTROLLER.getCurrentPlayer();
 	
 	@Override
 	public void execute() {
 		// A player can only take one biribaki
 		if(player.hasTakenBiribaki()) return;
-		
-		List<Card> biribaki = GameController.getInstance().getBoard().getBiribaki();
+		List<Card> biribaki = GAME_CONTROLLER.getBoard().getBiribaki();
 		player.addToHand(biribaki);
 		player.setHasTakenBiribaki();
-		if(GameController.getInstance().getPlayers().indexOf(player) == 0) {
+		if(GAME_CONTROLLER.getPlayers().indexOf(player) == 0) {
 			for(Card card : biribaki) {
 				card.setShowFace(true);
 				card.setClickable(true);
@@ -33,11 +31,6 @@ public class TakeBiribaki implements PlayerAction {
 		if(Turn.CurrentPhase() == BIRIBAKI_PLAY) {
 			Turn.setCurrentPhaseTo(DISCARD);
 		}
-	}
-	
-	@Override
-	public void execute(List<?> params) {
-	
 	}
 	
 	@Override

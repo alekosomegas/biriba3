@@ -1,7 +1,7 @@
 package com.akgames.biriba3.model;
 
 
-import com.akgames.biriba3.actions.*;
+import com.akgames.biriba3.events.*;
 import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.controller.Turn;
 import com.badlogic.gdx.Gdx;
@@ -12,11 +12,16 @@ import java.util.List;
 import java.util.Random;
 
 import static com.akgames.biriba3.controller.Turn.TurnPhases.DISCARD;
+import static com.akgames.biriba3.model.PlayerAI.Decision.*;
 
-//TODO: chose Actions at random
-// TODO: add weights to decisions
+// TODO: Use a decisions Tree
 public class PlayerAI extends Player {
-	List<Card> validCombination;
+	// list of cards from discards and hand that can create a triti
+	private List<Card> validCombination;
+	private Triti validTriti;
+	private Card validCard;
+	
+	;
 	
 	public PlayerAI(String name, int teamNumber) {
 		super(name, teamNumber);
@@ -26,88 +31,78 @@ public class PlayerAI extends Player {
 	@Override
 	public void act() {
 		Random rand = new Random();
-		// either 0 or 1
-		int decision = 0;
+		// Look at the discards and decide on action
+		Decision decision = analyzeDiscards();
 		
-		
-		// 1. Do discards hold a triti?
-		// 2. Do 2 cards from the discards + 1 from hand form a triti?
-		// 3. Does 1 card from discards + 2 from hand form a triti?
-		// 4. Does one card from discards be added to existing triti?
-		// 5. A card from discards plus 1 from hand can be added to existing triti
-		
-		
-		// TODO: refactor name
-		// picked from discards
-		
-		
-		// TODO: this only checks one card against existing, need to check only discards and any combination of 2s against hand
-		
-		// if it can't find triti then pick from deck
-		if(!findTriti()) decision = 1;
-		
-		if(decision == 0) {
-			GameController.getInstance().handleAction(new PickDiscards());
-			// TODO: does nothing if case 4 returns true
-			GameController.getInstance().handleAction(new CreateTritiAction(validCombination));
-		} else {
-			GameController.getInstance().handleAction(new PickFromDeck());
+		if(decision == NEW_TRITI_FROM_DISCARDS) {
+			gameController.handleAction(new PickDiscards());
+			gameController.handleAction(new CreateTritiAction(validCombination));
+		} else if(decision == ADD_TO_TRITI_FROM_DISCARDS) {
+			gameController.handleAction(new PickDiscards());
+			gameController.handleAction(new AddCardToTriti(validCard, validTriti));
+		} else if(decision == PICK_FROM_DECK) {
+			gameController.handleAction(new PickFromDeck());
 		}
-		
-		
 		Turn.setCurrentPhaseTo(DISCARD);
 		// TODO: joker only as last resort
 		int randNumCard = rand.nextInt(getCardCount());
-		GameController.getInstance().handleAction(new ThrowCardToDiscards(getHand().get(randNumCard)));
-		GameController.getInstance().handleAction(new EndTurn());
+		gameController.handleAction(new ThrowCardToDiscards(getHand().get(randNumCard)));
+		gameController.handleAction(new EndTurn());
 	}
 	
-	private boolean findTriti() {
-		List<Card> discards = new ArrayList<>(GameController.getInstance().getBoard().getDiscardPile());
+	/**
+	 * Analyses the discards to see if:
+	 * <ol>
+	 *     <li>Does one card from discards be added to existing triti</li>
+	 *     <li>Do discards hold a triti?</li>
+	 *     <li>Do 2 cards from the discards + 1 from hand form a triti</li>
+	 *     <li>Does 1 card from discards + 2 from hand form a triti</li>
+	 *     <li>A card from discards plus 1 from hand can be added to existing triti</li>
+	 * </ol>
+	 * And return a decision
+	 */
+	private Decision analyzeDiscards() {
+		// TODO: check if n cards from discards + n cards from hand can be added to an existing triti
+		List<Card> discards = new ArrayList<>(gameController.getBoard().getDiscardPile());
 		this.groups = groupHandBySuit();
-		
-		// 4. Does one card from discards be added to existing triti?
+		// Does one card from discards be added to existing triti?
 		for(Card card : discards) {
-			List<Triti> trites = GameController.getInstance().getBoard().getTrites(getTeamNumber());
+			List<Triti> trites = gameController.getBoard().getTrites(getTeamNumber());
 			for(Triti triti : trites) {
+				// TODO: don't stop at the first. Store all valid cards and find best
 				if(triti.validateAddCard(card)) {
-					Gdx.app.log(getClass().getName(), card.isShowFace() + " " + card);
-					GameController.getInstance().handleAction(new PickDiscards());
-					// TODO: does nothing if case 4 returns true
-					GameController.getInstance().handleAction(new AddCardToTriti(card, triti));
-					return true;
+					validTriti = triti;
+					validCard = card;
+					return ADD_TO_TRITI_FROM_DISCARDS;
 				}
 			}
 		}
-		
-		// 1. Do discards hold a triti?
+		// Do discards hold a triti?
 		if(discards.size() > 2) {
 			if(findValidTritiIn(discards)) {
-				return true;
+				return NEW_TRITI_FROM_DISCARDS;
 			}
 			;
 		}
-		
-		// 2. Do 2 cards from the discards + 1 from hand form a triti?
+		// Do 2 cards from the discards + 1 from hand form a triti?
 		if(discards.size() > 1) {
 			if(findValidTriti(discards)) {
-				return true;
+				return NEW_TRITI_FROM_DISCARDS;
 			}
 		}
 		
-		// 3. Does 1 card from discards + 2 from hand form a triti?
+		// Does 1 card from discards + 2 from hand form a triti?
 		for(Card card : discards) {
 			if(findValidTriti(card)) {
-				return true;
+				return NEW_TRITI_FROM_DISCARDS;
 			}
 		}
 		// tried everything
-		return false;
+		return PICK_FROM_DECK;
 	}
 	
 	private boolean findValidTritiIn(List<Card> discards) {
 		List<List<Card>> combinationsFromDiscards = generateCombinations3s(discards);
-		
 		for(List<Card> combination : combinationsFromDiscards) {
 			if(Triti.canCreateValidTriti(combination)) {
 				validCombination = combination;
@@ -119,7 +114,6 @@ public class PlayerAI extends Player {
 	
 	private boolean findValidTriti(List<Card> discards) {
 		List<List<Card>> combinationsFromDiscards = generateCombinationsPairs(discards);
-		
 		// TODO: remove jokers add them later( check normals, check jokers, check 2 not optimal but ok)
 		for(Card cardHand : getHand()) {
 			for(List<Card> combination : combinationsFromDiscards) {
@@ -134,9 +128,7 @@ public class PlayerAI extends Player {
 	}
 	
 	private boolean findValidTriti(Card card) {
-		Gdx.app.log(this.getClass().getName(), "Looking for a valid triti using card : " + card);
 		List<List<Card>> groups = this.groups;
-		
 		List<List<Card>> combinations;
 		int i = 0;
 		// check suits groups
@@ -184,7 +176,6 @@ public class PlayerAI extends Player {
 	
 	private List<List<Card>> generateCombinations3s(List<Card> group) {
 		List<List<Card>> combinations = new ArrayList<>();
-		
 		for(int i = 0; i < group.size() - 2; i++) {
 			for(int j = i + 1; j < group.size() - 1; j++) {
 				for(int k = 0; k < group.size(); k++) {
@@ -193,7 +184,6 @@ public class PlayerAI extends Player {
 					combination.add(group.get(j));
 					combination.add(group.get(k));
 					combinations.add(combination);
-					
 				}
 			}
 		}
@@ -202,7 +192,6 @@ public class PlayerAI extends Player {
 	
 	private List<List<Card>> generateCombinationsPairs(List<Card> group) {
 		List<List<Card>> combinations = new ArrayList<>();
-		
 		for(int i = 0; i < group.size() - 1; i++) {
 			for(int j = i + 1; j < group.size(); j++) {
 				List<Card> combination = new ArrayList<>();
@@ -226,4 +215,6 @@ public class PlayerAI extends Player {
 		card.setShowFace(false);
 		getHand().add(card);
 	}
+	
+	enum Decision {PICK_FROM_DECK, NEW_TRITI_FROM_DISCARDS, ADD_TO_TRITI_FROM_DISCARDS}
 }

@@ -1,7 +1,7 @@
 package com.akgames.biriba3.view;
 
-import com.akgames.biriba3.actions.Utils.Utils;
-import com.akgames.biriba3.actions.PickDiscards;
+import com.akgames.biriba3.Utils.Utils;
+import com.akgames.biriba3.events.PickDiscards;
 import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.model.Card;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;

@@ -25,8 +25,9 @@ public class GameOptions {
 	public static final Color BG_COLOR = new Color(0.1f, 0.1f, 0.1f, 0.5f);
 	public static Skin SKIN;
 	public List<PlayerTemp> playersTemp;
-	private GameController gameLogic;
-	private PropertyChangeSupport support;
+	private final GameController gameLogic;
+	private final PropertyChangeSupport support;
+	
 	/**
 	 * Start with default players
 	 */
@@ -131,7 +132,7 @@ public class GameOptions {
 		return true;
 	}
 	
-	private class PlayerTemp {
+	private static class PlayerTemp {
 		public String name;
 		public boolean isAi;
 		public int team;

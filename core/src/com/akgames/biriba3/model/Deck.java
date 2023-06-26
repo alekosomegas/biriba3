@@ -10,18 +10,17 @@ import java.util.List;
  * Responsible for creating all the new Cards
  */
 public class Deck {
-	private List<Card> cards;
+	private final List<Card> cards;
+	private final PropertyChangeSupport support;
 	private int size;
-	private PropertyChangeSupport support;
 	
 	public Deck() {
-		support = new PropertyChangeSupport(this);
-		cards = new ArrayList<>();
+		this.support = new PropertyChangeSupport(this);
+		this.cards = new ArrayList<>();
 		// add two decks
 		for(int i = 0; i < 52 * 2; i++) {
 			cards.add(new Card(i % 52));
 		}
-		
 		// add jokers
 		for(int i = 0; i < 4; i++) {
 			cards.add(new Card(-1));
@@ -34,7 +33,6 @@ public class Deck {
 		Collections.shuffle(cards);
 	}
 	
-	// TODO: what happens when no cards left?
 	public Card getTopCard() {
 		setSize(cards.size() - 1);
 		return cards.remove(cards.size() - 1);
@@ -50,11 +48,6 @@ public class Deck {
 	public void addCard(Card card) {
 		cards.add(card);
 		setSize(cards.size() + 1);
-	}
-	
-	//TODO: remove this
-	public List<Card> getCards() {
-		return cards;
 	}
 	
 	public String getNumOfRemainingCards() {

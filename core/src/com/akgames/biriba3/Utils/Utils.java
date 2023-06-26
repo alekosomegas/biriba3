@@ -1,4 +1,4 @@
-package com.akgames.biriba3.actions.Utils;
+package com.akgames.biriba3.Utils;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
