@@ -28,18 +28,18 @@ import static com.akgames.biriba3.controller.GameOptions.BG_COLOR;
  */
 public class GameUI extends Table {
 	
-	private final GameController gameLogic;
+	private final GameController gameController;
 	private final BoardActor boardActor;
 	private final PlayerHandActor mainPlayerHandActor;
 	private final Biriba3 game;
 	
 	
 	public GameUI(final Biriba3 game) {
-		this.gameLogic = GameController.getInstance();
+		this.gameController = GameController.getInstance();
 		this.game = game;
-		this.boardActor = new BoardActor(gameLogic.getBoard());
-		this.mainPlayerHandActor = new PlayerHandActor(gameLogic.getMainPlayer());
-		gameLogic.setMainPlayerHandActor(mainPlayerHandActor);
+		this.boardActor = new BoardActor(gameController.getBoard());
+		this.mainPlayerHandActor = new PlayerHandActor(gameController.getMainPlayer());
+		gameController.setMainPlayerHandActor(mainPlayerHandActor);
 		// Place UI elements
 		// create table for bottom row (main player and controls)
 		BottomRowTable bottomRowTable = new BottomRowTable();
@@ -51,9 +51,9 @@ public class GameUI extends Table {
 		Utils.setBackground(topRowTable, BG_COLOR);
 		Utils.setBackground(this, BG_COLOR);
 		// Change layout depending on number of players
-		if(gameLogic.getNumOfPlayers() == 2) {
+		if(gameController.getNumOfPlayers() == 2) {
 			// Create UI elements for player 1
-			PlayerBox p1 = new PlayerBox(gameLogic.getPlayers().get(1));
+			PlayerBox p1 = new PlayerBox(gameController.getPlayers().get(1));
 			// Add elements to table
 			topRowTable.add(p1);
 			add(topRowTable).center().top().grow().height(p1.getHeight() + 100);
@@ -64,14 +64,14 @@ public class GameUI extends Table {
 		} else {
 			defaults().pad(10);
 			// Create UI elements for player 1
-			PlayerBox p1 = new PlayerBox(gameLogic.getPlayers().get(1));
+			PlayerBox p1 = new PlayerBox(gameController.getPlayers().get(1));
 			topRowTable.add(p1).center().width(p1.getWidth()).grow();
 			// Create UI elements for player 2
-			PlayerBox p2 = new PlayerBox(gameLogic.getPlayers().get(2));
+			PlayerBox p2 = new PlayerBox(gameController.getPlayers().get(2));
 			topRowTable.add(p2).center().grow().width(p2.getWidth());
 			// Create UI elements for player 3
-			if(gameLogic.getNumOfPlayers() == 4) {
-				PlayerBox p3 = new PlayerBox(gameLogic.getPlayers().get(3));
+			if(gameController.getNumOfPlayers() == 4) {
+				PlayerBox p3 = new PlayerBox(gameController.getPlayers().get(3));
 				topRowTable.add(p3).center().grow().width(p3.getWidth());
 			}
 			// Add elements to table
@@ -108,7 +108,7 @@ public class GameUI extends Table {
 				@Override
 				public void dragStop(InputEvent event, float x, float y, int pointer, DragAndDrop.Payload payload, DragAndDrop.Target target) {
 					// TODO: find a better way to refresh
-					gameLogic.refreshUi();
+					gameController.refreshUi();
 				}
 			});
 			// Can be dropped in the discards pile
@@ -126,7 +126,7 @@ public class GameUI extends Table {
 				}
 			});
 			// Can be dropped in a Triti that belongs to the players team
-			TeamsTrites mainPlayerTeamTrites = boardActor.getGroupTrites().get(gameLogic.getMainPlayer().getTeamNumber());
+			TeamsTrites mainPlayerTeamTrites = boardActor.getGroupTrites().get(gameController.getMainPlayer().getTeamNumber());
 			for(final TritiActor triti : mainPlayerTeamTrites.getTritiActors()) {
 				dragAndDrop.addTarget(new DragAndDrop.Target(triti) {
 					@Override
@@ -138,7 +138,7 @@ public class GameUI extends Table {
 					public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
 						CardActor cardActor = (CardActor) payload.getDragActor();
 						Card card = cardActor.getCard();
-						gameLogic.handleAction(new AddCardToTriti(card, triti.getTriti()));
+						gameController.handleAction(new AddCardToTriti(card, triti.getTriti()));
 					}
 				});
 			}
@@ -198,7 +198,7 @@ public class GameUI extends Table {
 			endTurn.addListener(new ChangeListener() {
 				@Override
 				public void changed(ChangeEvent event, Actor actor) {
-					gameLogic.handleAction(new EndTurn());
+					gameController.handleAction(new EndTurn());
 				}
 			});
 			endTurn.setHeight(500f);
@@ -213,7 +213,7 @@ public class GameUI extends Table {
 			createNewTriti.addListener(new ChangeListener() {
 				@Override
 				public void changed(ChangeEvent event, Actor actor) {
-					gameLogic.handleAction(new CreateTritiAction());
+					gameController.handleAction(new CreateTritiAction());
 				}
 			});
 			
@@ -221,7 +221,7 @@ public class GameUI extends Table {
 			undoBtn.addListener(new ChangeListener() {
 				@Override
 				public void changed(ChangeEvent event, Actor actor) {
-					// TODO: undo
+					gameController.undo();
 				}
 			});
 			

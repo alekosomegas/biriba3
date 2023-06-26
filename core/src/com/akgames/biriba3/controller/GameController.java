@@ -37,7 +37,6 @@ public class GameController implements PropertyChangeListener {
 	private List<Card> selectedCards;
 	private boolean currentPlayerHasThrownCard;
 	
-	
 	// players created by the gameController / setup screen
 	private GameController() {
 		this.gameOptions = new GameOptions(this);
@@ -164,14 +163,21 @@ public class GameController implements PropertyChangeListener {
 		return players.get(currentPlayerIndex);
 	}
 	
-	public void handleAction(GameEvent playerAction) {
-		Gdx.app.log(this.getClass().getName(), "\n\tCurrent Player: " + getCurrentPlayer().getName() + "\n\tTurn Phase: " + Turn.CurrentPhase() + " \n\tAction: " + playerAction.getClass().getName());
-		
-		if(!playerAction.allowed()) return;
+	public void handleAction(GameEvent gameEvent) {
+		Gdx.app.log(this.getClass().getName(), "\n\tCurrent Player: " + getCurrentPlayer().getName() + "\n\tTurn Phase: " + Turn.CurrentPhase() + " \n\tAction: " + gameEvent.getClass().getName());
+		if(!gameEvent.allowed()) return;
 		Gdx.app.debug(getClass().getName(), "Action allowed, entering execution...");
-		//        playerActionsQueue.add(playerAction);
-		
-		playerAction.execute();
+		playerActionsQueue.add(gameEvent);
+		gameEvent.execute();
+		// refresh screen
+		gameScreen.show();
+	}
+	
+	public void undo() {
+		if(playerActionsQueue.size() == 0) return;
+		GameEvent lastEvent = playerActionsQueue.remove(playerActionsQueue.size()-1);
+		Gdx.app.debug(getClass().getName(), "Undo: " + lastEvent.getClass().getName());
+		lastEvent.undo();
 		// refresh screen
 		gameScreen.show();
 	}

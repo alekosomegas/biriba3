@@ -4,6 +4,7 @@ import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.controller.GameOptions;
 import com.akgames.biriba3.ui.GameScreen;
 import com.akgames.biriba3.ui.MainMenuScreen;
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -28,6 +29,7 @@ public class Biriba3 extends Game {
 	
 	@Override
 	public void create() {
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		GameOptions.SKIN = new Skin(Gdx.files.internal("skins/default/skin/uiskin.json"));
 		mainMenuScreen = new MainMenuScreen(this);
 		gameScreen = new GameScreen(this);

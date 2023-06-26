@@ -171,6 +171,10 @@ public class Triti {
 	public ArrayList<Card> getCards() {
 		return cards;
 	}
+	// Only for undo
+	public void setCards(ArrayList<Card> cards) {
+		this.cards = cards;
+	}
 	
 	public int getTeam() {
 		return team;
@@ -215,6 +219,7 @@ public class Triti {
 			
 			return false;
 		}
+		
 		
 	}
 }
