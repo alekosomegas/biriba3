@@ -1,6 +1,6 @@
 package com.akgames.biriba3.view;
 
-import com.akgames.biriba3.events.TakeBiribaki;
+import com.akgames.biriba3.events.TakeBiribakiEvent;
 import com.akgames.biriba3.controller.GameController;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -32,7 +32,7 @@ public class BiribakiaActor extends Stack {
 			
 			@Override
 			public void clicked(InputEvent e, float x, float y) {
-				GameController.getInstance().handleAction(new TakeBiribaki());
+				GameController.getInstance().handleAction(new TakeBiribakiEvent());
 			}
 			
 		});

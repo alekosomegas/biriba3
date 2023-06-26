@@ -1,6 +1,6 @@
 package com.akgames.biriba3.view;
 
-import com.akgames.biriba3.events.PickFromDeck;
+import com.akgames.biriba3.events.PickFromDeckEvent;
 import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.controller.GameOptions;
 import com.akgames.biriba3.model.Deck;
@@ -34,7 +34,7 @@ public class DeckActor extends Actor {
 		this.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				gameLogic.handleAction(new PickFromDeck());
+				gameLogic.handleAction(new PickFromDeckEvent());
 			}
 		});
 	}

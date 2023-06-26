@@ -1,7 +1,7 @@
 package com.akgames.biriba3.ui;
 
 import com.akgames.biriba3.Biriba3;
-import com.akgames.biriba3.events.StartGame;
+import com.akgames.biriba3.events.StartGameEvent;
 import com.akgames.biriba3.controller.GameOptions;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -98,7 +98,7 @@ public class GameScreen extends ScreenAdapter {
 	private class handleClickStartGameBtn extends ChangeListener {
 		@Override
 		public void changed(ChangeEvent event, Actor actor) {
-			game.getGameLogic().handleAction(new StartGame());
+			game.getGameLogic().handleAction(new StartGameEvent());
 			actor.setVisible(false);
 		}
 	}

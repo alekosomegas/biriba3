@@ -1,7 +1,7 @@
 package com.akgames.biriba3.view;
 
 import com.akgames.biriba3.Utils.Utils;
-import com.akgames.biriba3.events.PickDiscards;
+import com.akgames.biriba3.events.PickDiscardsEvent;
 import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.model.Card;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -48,12 +48,12 @@ public class DiscardsPileActor extends Table {
 		cardRows.space(-CARD_SIZE[1] / 2f);
 		// Add a background colour
 		Utils.setBackground(this, BG_COLOR);
-		pad(50);
+		pad(25);
 		// Notify the controller
 		addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				GameController.getInstance().handleAction(new PickDiscards());
+				GameController.getInstance().handleAction(new PickDiscardsEvent());
 			}
 		});
 		

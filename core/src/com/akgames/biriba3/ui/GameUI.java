@@ -2,10 +2,10 @@ package com.akgames.biriba3.ui;
 
 import com.akgames.biriba3.Biriba3;
 import com.akgames.biriba3.Utils.Utils;
-import com.akgames.biriba3.events.AddCardToTriti;
-import com.akgames.biriba3.events.CreateTritiAction;
-import com.akgames.biriba3.events.EndTurn;
-import com.akgames.biriba3.events.ThrowCardToDiscards;
+import com.akgames.biriba3.events.AddCardToTritiEvent;
+import com.akgames.biriba3.events.CreateNewTritiEvent;
+import com.akgames.biriba3.events.EndTurnEvent;
+import com.akgames.biriba3.events.ThrowCardToDiscardsEvent;
 import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.controller.GameOptions;
 import com.akgames.biriba3.model.Card;
@@ -122,7 +122,7 @@ public class GameUI extends Table {
 				public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
 					CardActor cardActor = (CardActor) payload.getDragActor();
 					Card card = cardActor.getCard();
-					GameController.getInstance().handleAction(new ThrowCardToDiscards(card));
+					GameController.getInstance().handleAction(new ThrowCardToDiscardsEvent(card));
 				}
 			});
 			// Can be dropped in a Triti that belongs to the players team
@@ -138,7 +138,7 @@ public class GameUI extends Table {
 					public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
 						CardActor cardActor = (CardActor) payload.getDragActor();
 						Card card = cardActor.getCard();
-						gameController.handleAction(new AddCardToTriti(card, triti.getTriti()));
+						gameController.handleAction(new AddCardToTritiEvent(card, triti.getTriti()));
 					}
 				});
 			}
@@ -198,7 +198,7 @@ public class GameUI extends Table {
 			endTurn.addListener(new ChangeListener() {
 				@Override
 				public void changed(ChangeEvent event, Actor actor) {
-					gameController.handleAction(new EndTurn());
+					gameController.handleAction(new EndTurnEvent());
 				}
 			});
 			endTurn.setHeight(500f);
@@ -213,7 +213,7 @@ public class GameUI extends Table {
 			createNewTriti.addListener(new ChangeListener() {
 				@Override
 				public void changed(ChangeEvent event, Actor actor) {
-					gameController.handleAction(new CreateTritiAction());
+					gameController.handleAction(new CreateNewTritiEvent());
 				}
 			});
 			

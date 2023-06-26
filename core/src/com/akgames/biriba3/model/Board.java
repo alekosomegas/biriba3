@@ -41,14 +41,20 @@ public class Board {
 	public void addToDiscardPile(Card discardedCard) {
 		discardPile.add(discardedCard);
 	}
-	
+	public void addAllToDiscardPile(List<Card> cards) {discardPile.addAll(cards);}
+	public void removeFromDiscardedPile(Card card) {discardPile.remove(card);}
 	public void addTriti(Triti triti) {
 		trites.get(triti.getTeam()).add(triti);
+	}
+	public void removerTriti(Triti triti) {
+		trites.get(triti.getTeam()).remove(triti);
 	}
 	
 	public List<Triti> getTrites(int team) {
 		return trites.get(team);
 	}
+	
+	
 	
 	public void createBiribakia(List<Card> cards1, List<Card> cards2) {
 		biribaki1 = cards1;

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+//TODO: perhaps simplify by looping over the ranks and assign it to the joker and then just
+//check if cards values are in sequence.
 public class CheckTriti {
 	
 	public static boolean checkCase_1A_Joker(Triti.Characteristics characteristics, List<Card> cards) {

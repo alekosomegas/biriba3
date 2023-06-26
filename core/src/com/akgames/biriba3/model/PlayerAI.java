@@ -2,7 +2,6 @@ package com.akgames.biriba3.model;
 
 
 import com.akgames.biriba3.events.*;
-import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.controller.Turn;
 import com.badlogic.gdx.Gdx;
 
@@ -35,19 +34,19 @@ public class PlayerAI extends Player {
 		Decision decision = analyzeDiscards();
 		
 		if(decision == NEW_TRITI_FROM_DISCARDS) {
-			gameController.handleAction(new PickDiscards());
-			gameController.handleAction(new CreateTritiAction(validCombination));
+			gameController.handleAction(new PickDiscardsEvent());
+			gameController.handleAction(new CreateNewTritiEvent(validCombination));
 		} else if(decision == ADD_TO_TRITI_FROM_DISCARDS) {
-			gameController.handleAction(new PickDiscards());
-			gameController.handleAction(new AddCardToTriti(validCard, validTriti));
+			gameController.handleAction(new PickDiscardsEvent());
+			gameController.handleAction(new AddCardToTritiEvent(validCard, validTriti));
 		} else if(decision == PICK_FROM_DECK) {
-			gameController.handleAction(new PickFromDeck());
+			gameController.handleAction(new PickFromDeckEvent());
 		}
 		Turn.setCurrentPhaseTo(DISCARD);
 		// TODO: joker only as last resort
 		int randNumCard = rand.nextInt(getCardCount());
-		gameController.handleAction(new ThrowCardToDiscards(getHand().get(randNumCard)));
-		gameController.handleAction(new EndTurn());
+		gameController.handleAction(new ThrowCardToDiscardsEvent(getHand().get(randNumCard)));
+		gameController.handleAction(new EndTurnEvent());
 	}
 	
 	/**

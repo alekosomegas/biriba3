@@ -3,14 +3,14 @@ package com.akgames.biriba3.events;
 import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.controller.Turn;
 
-public class StartGame implements GameEvent {
+public class StartGameEvent implements GameEvent {
 	Turn turnPhase;
 	
-	public StartGame() {
+	public StartGameEvent() {
 		// Initiates the Turn
 		turnPhase = Turn.getInstance();
 		// Deal the cards
-		GameController.getInstance().handleAction(new DealAction());
+		GameController.getInstance().handleAction(new DealEvent());
 	}
 	
 	@Override
@@ -19,8 +19,8 @@ public class StartGame implements GameEvent {
 	}
 	
 	@Override
-	public void undo() {
-	
+	public boolean undo() {
+		return false;
 	}
 	
 	@Override

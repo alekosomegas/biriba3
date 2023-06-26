@@ -5,9 +5,9 @@ import com.akgames.biriba3.model.Card;
 
 import static com.akgames.biriba3.controller.Turn.TurnPhases.PICK;
 
-public class PickFromDeck implements GameEvent {
+public class PickFromDeckEvent implements GameEvent {
 	
-	public PickFromDeck() {
+	public PickFromDeckEvent() {
 	}
 	
 	@Override
@@ -24,8 +24,9 @@ public class PickFromDeck implements GameEvent {
 	}
 	
 	@Override
-	public void undo() {
+	public boolean undo() {
 		// not allowed
+		return false;
 	}
 	
 	@Override

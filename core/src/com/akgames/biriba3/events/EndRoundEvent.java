@@ -1,11 +1,8 @@
 package com.akgames.biriba3.events;
 
-import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.model.Card;
 
-import java.util.List;
-
-public class EndRound implements GameEvent {
+public class EndRoundEvent implements GameEvent {
 	@Override
 	public void execute() {
 		// Clear selected cards
@@ -16,8 +13,8 @@ public class EndRound implements GameEvent {
 	}
 	
 	@Override
-	public void undo() {
-	
+	public boolean undo() {
+		return false;
 	}
 	
 	@Override

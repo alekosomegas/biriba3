@@ -2,7 +2,7 @@ package com.akgames.biriba3.events;
 
 import com.badlogic.gdx.Gdx;
 
-public class GameOver implements GameEvent {
+public class GameOverEvent implements GameEvent {
 	@Override
 	public void execute() {
 		Gdx.app.log(getClass().getName(), "GAME OVER");
@@ -10,8 +10,9 @@ public class GameOver implements GameEvent {
 	}
 	
 	@Override
-	public void undo() {
+	public boolean undo() {
 		// No undo
+		return false;
 	}
 	
 	@Override

@@ -1,7 +1,7 @@
 package com.akgames.biriba3.controller;
 
 import com.akgames.biriba3.events.GameEvent;
-import com.akgames.biriba3.events.GameOver;
+import com.akgames.biriba3.events.GameOverEvent;
 import com.akgames.biriba3.model.Board;
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.model.Player;
@@ -140,7 +140,7 @@ public class GameController implements PropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(Objects.equals(evt.getPropertyName(), "Empty Hand")) {
 			if(getCurrentPlayer().hasTakenBiribaki()) {
-				handleAction(new GameOver());
+				handleAction(new GameOverEvent());
 				return;
 			}
 			if(currentPlayerHasThrownCard) {
@@ -154,13 +154,17 @@ public class GameController implements PropertyChangeListener {
 		// TODO: after the current turn finishes
 		if(Objects.equals(evt.getPropertyName(), "Deck Size Changed")) {
 			if(Objects.equals(evt.getNewValue(), 2)) {
-				handleAction(new GameOver());
+				handleAction(new GameOverEvent());
 			}
 		}
 	}
 	
 	public Player getCurrentPlayer() {
 		return players.get(currentPlayerIndex);
+	}
+	
+	public void clearPlayerActionsQueue() {
+		this.playerActionsQueue.clear();
 	}
 	
 	public void handleAction(GameEvent gameEvent) {
@@ -175,9 +179,12 @@ public class GameController implements PropertyChangeListener {
 	
 	public void undo() {
 		if(playerActionsQueue.size() == 0) return;
-		GameEvent lastEvent = playerActionsQueue.remove(playerActionsQueue.size()-1);
+		GameEvent lastEvent = playerActionsQueue.remove(playerActionsQueue.size() - 1);
 		Gdx.app.debug(getClass().getName(), "Undo: " + lastEvent.getClass().getName());
-		lastEvent.undo();
+		// clear the queue if reached an undoable action
+		if(!lastEvent.undo()) {
+			playerActionsQueue.clear();
+		}
 		// refresh screen
 		gameScreen.show();
 	}

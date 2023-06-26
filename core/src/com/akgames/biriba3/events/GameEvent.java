@@ -8,6 +8,7 @@ public interface GameEvent {
 	
 	GameController GAME_CONTROLLER = GameController.getInstance();
 	public void execute();
-	public void undo();
+	/** Return false if it cannot be undone */
+	public boolean undo();
 	boolean allowed();
 }

@@ -39,9 +39,9 @@ public class BoardActor extends Table implements PropertyChangeListener {
 		int numBiribakia = board.getNumBiribakia();
 		BiribakiaActor biribakiaActor = new BiribakiaActor();
 		// Place UI elements to table
-		add(biribakiaActor).size(GameOptions.CARD_SIZE[numBiribakia == 2 ? 1 : 0], GameOptions.CARD_SIZE[1]).left();
+		add(biribakiaActor).size(GameOptions.CARD_SIZE[numBiribakia == 2 ? 1 : 0], GameOptions.CARD_SIZE[1]).left().pad(25);
 		add(discardsPileActor).center().grow().width(CARD_SIZE[0] * 0.2f * 20);
-		add(new DeckTable()).top().right();
+		add(new DeckTable()).top().right().pad(25);
 		row();
 		add(new TritesTable()).colspan(3).grow().pad(40);
 	}

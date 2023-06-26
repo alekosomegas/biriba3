@@ -11,12 +11,12 @@ import java.util.List;
 
 import static com.akgames.biriba3.controller.GameOptions.*;
 
-public class DealAction implements GameEvent {
+public class DealEvent implements GameEvent {
 	private final Board board;
 	private final Deck deck;
 	private final List<Player> players;
 	
-	public DealAction() {
+	public DealEvent() {
 		GameController gameLogic = GameController.getInstance();
 		this.board = gameLogic.getBoard();
 		this.deck = gameLogic.getBoard().getDeck();
@@ -48,7 +48,9 @@ public class DealAction implements GameEvent {
 	}
 	
 	@Override
-	public void undo() {
+	public boolean undo() {
+		// no undo
+		return false;
 	}
 	
 	@Override

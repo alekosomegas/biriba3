@@ -13,29 +13,31 @@ import static com.akgames.biriba3.controller.Turn.TurnPhases.DISCARD;
 import static com.akgames.biriba3.controller.Turn.TurnPhases.TRITI;
 
 // TODO: Check A-2-Q
-public class CreateTritiAction implements GameEvent {
+public class CreateNewTritiEvent implements GameEvent {
 	
-	private final List<Card> selectedCards;
+	private List<Card> selectedCards;
 	private final Player currentPLayer;
 	private final Board board;
+	private final boolean hasPickedFromDiscards;
+	private Triti triti;
 	
 	// Used by GameUI
-	public CreateTritiAction() {
+	public CreateNewTritiEvent() {
 		this.selectedCards = GAME_CONTROLLER.getSelectedCards();
 		this.currentPLayer = GAME_CONTROLLER.getCurrentPlayer();
 		this.board = GAME_CONTROLLER.getBoard();
+		this.hasPickedFromDiscards = Turn.CurrentPhase() == TRITI;
 	}
 	
 	// Used by player Ai
-	public CreateTritiAction(List<Card> cards) {
+	public CreateNewTritiEvent(List<Card> cards) {
+		this();
 		this.selectedCards = cards;
-		this.currentPLayer = GAME_CONTROLLER.getCurrentPlayer();
-		this.board = GAME_CONTROLLER.getBoard();
 	}
 	
 	@Override
 	public void execute() {
-		Triti triti = Triti.createTriti(new ArrayList<>(selectedCards));
+		triti = Triti.createTriti(new ArrayList<>(selectedCards));
 		if(triti != null) {
 			for(Card card : selectedCards) {
 				card.setSelected(false);
@@ -54,8 +56,23 @@ public class CreateTritiAction implements GameEvent {
 	}
 	
 	@Override
-	public void undo() {
-	
+	public boolean undo() {
+		// button clicked but no triti created, do nothing
+		if(triti == null) return true;
+		for(Card card : triti.getCards()) {
+			card.setSelected(true);
+			card.setClickable(true);
+			// reset values
+			if(card.isJoker) card.setValueAndRankAndSuit(-1, -1);
+			if(card.getRank() == 14) card.setValueAndRankAndSuit(1, card.getSuit());
+			if(card.getRank() == 2) card.setValueAndRankAndSuit(2, card.getSuit());
+		}
+		currentPLayer.addToHand(triti.getCards());
+		selectedCards.addAll(triti.getCards());
+		board.removerTriti(triti);
+		if(hasPickedFromDiscards) Turn.setCurrentPhaseTo(TRITI);
+		
+		return true;
 	}
 	
 	@Override

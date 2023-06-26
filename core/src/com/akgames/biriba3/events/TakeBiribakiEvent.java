@@ -8,7 +8,7 @@ import java.util.List;
 
 import static com.akgames.biriba3.controller.Turn.TurnPhases.*;
 
-public class TakeBiribaki implements GameEvent {
+public class TakeBiribakiEvent implements GameEvent {
 	Player player = GAME_CONTROLLER.getCurrentPlayer();
 	
 	@Override
@@ -34,7 +34,8 @@ public class TakeBiribaki implements GameEvent {
 	}
 	
 	@Override
-	public void undo() {
+	public boolean undo() {
+		return false;
 	
 	}
 	
