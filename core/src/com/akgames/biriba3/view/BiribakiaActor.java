@@ -1,5 +1,6 @@
 package com.akgames.biriba3.view;
 
+import com.akgames.biriba3.controller.Match;
 import com.akgames.biriba3.events.TakeBiribakiEvent;
 import com.akgames.biriba3.controller.GameController;
 import com.badlogic.gdx.Gdx;
@@ -16,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class BiribakiaActor extends Stack {
 	
 	public BiribakiaActor() {
-		int numBiribakia = GameController.getInstance().getBoard().getNumBiribakia();
+		int numBiribakia = Match.getController().getBoard().getNumBiribakia();
 		// Load images
 		Texture texture = new Texture(Gdx.files.internal("assets/cardImgs/back90.png"));
 		Image cardImage1 = new Image(new TextureRegion(texture));
@@ -32,7 +33,7 @@ public class BiribakiaActor extends Stack {
 			
 			@Override
 			public void clicked(InputEvent e, float x, float y) {
-				GameController.getInstance().handleAction(new TakeBiribakiEvent());
+				Match.getController().handleAction(new TakeBiribakiEvent());
 			}
 			
 		});

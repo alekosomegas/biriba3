@@ -1,6 +1,7 @@
 package com.akgames.biriba3.events;
 
 import com.akgames.biriba3.controller.GameController;
+import com.akgames.biriba3.controller.Match;
 import com.akgames.biriba3.controller.Turn;
 
 public class StartGameEvent implements GameEvent {
@@ -8,9 +9,8 @@ public class StartGameEvent implements GameEvent {
 	
 	public StartGameEvent() {
 		// Initiates the Turn
-		turnPhase = Turn.getInstance();
-		// Deal the cards
-		GameController.getInstance().handleAction(new DealEvent());
+		turnPhase = Turn.getNewInstance();
+		Match.createNewGame();
 	}
 	
 	@Override

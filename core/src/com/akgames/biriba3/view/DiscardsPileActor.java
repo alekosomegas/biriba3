@@ -1,6 +1,7 @@
 package com.akgames.biriba3.view;
 
 import com.akgames.biriba3.Utils.Utils;
+import com.akgames.biriba3.controller.Match;
 import com.akgames.biriba3.events.PickDiscardsEvent;
 import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.model.Card;
@@ -22,7 +23,7 @@ public class DiscardsPileActor extends Table {
 	
 	public DiscardsPileActor() {
 		// The discarded cards
-		List<Card> discardPile = GameController.getInstance().getBoard().getDiscardPile();
+		List<Card> discardPile = Match.getController().getBoard().getDiscardPile();
 		// List of all the horizontal groups
 		List<HorizontalGroup> horizontalGroupList = new ArrayList<>();
 		// Group will lay the cards' actors in horizontally
@@ -53,7 +54,7 @@ public class DiscardsPileActor extends Table {
 		addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				GameController.getInstance().handleAction(new PickDiscardsEvent());
+				Match.getController().handleAction(new PickDiscardsEvent());
 			}
 		});
 		

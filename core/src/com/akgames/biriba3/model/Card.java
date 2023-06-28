@@ -19,7 +19,7 @@ public class Card implements Comparable<Card> {
 	public Card(int value) {
 		this.value = value;
 		this.initialValue = value;
-		showFace = false;
+		this.showFace = false;
 		// Joker
 		if(value == -1) {
 			this.suit = -1;
@@ -34,6 +34,7 @@ public class Card implements Comparable<Card> {
 		}
 		this.clickable = false;
 		this.selected = false;
+		this.points = assignPoints();
 	}
 	
 	public String getImageUrl() {
@@ -95,5 +96,32 @@ public class Card implements Comparable<Card> {
 	
 	public int getValue() {
 		return value;
+	}
+	
+	public int assignPoints() {
+		switch(rank) {
+			// Joker
+			case -1:
+				return 30;
+			// Ace
+			case 1:
+				return 15;
+			// 2
+			case 2:
+				return 25;
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+				return 5;
+			default:
+				return 10;
+		}
+	}
+	
+	public int getPoints() {
+		return points;
 	}
 }

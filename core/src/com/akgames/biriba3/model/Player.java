@@ -1,6 +1,7 @@
 package com.akgames.biriba3.model;
 
 import com.akgames.biriba3.controller.GameController;
+import com.akgames.biriba3.controller.Match;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class Player {
 	private final int teamNumber;
+	private Team team;
 	private final PropertyChangeSupport support;
 	protected List<Card> handDiscarded;
 	protected List<List<Card>> groups;
@@ -18,13 +20,10 @@ public class Player {
 	protected List<Card> twos;
 	protected GameController gameController;
 	private List<Card> hand;
-	private int score;
-	private int penaltyPoints;
 	private String name;
 	private boolean hasTakenBiribaki;
 	
 	public Player(String name, int teamNumber) {
-		this.gameController = GameController.getInstance();
 		this.hand = new ArrayList<>();
 		this.handDiscarded = new ArrayList<>();
 		this.groups = new ArrayList<>();
@@ -34,6 +33,27 @@ public class Player {
 		this.teamNumber = teamNumber;
 		this.hasTakenBiribaki = false;
 		this.support = new PropertyChangeSupport(this);
+	}
+	
+	public void addController(GameController controller) {
+		this.gameController = controller;
+	}
+	
+	public Team getTeam() {
+		return team;
+	}
+	
+	public void setTeam(Team team) {
+		this.team = team;
+	}
+	
+	public int getPenaltyPoints() {
+		if (gameController == null || !gameController.isGameOver()) return 0;
+		int penaltyPoints = 0;
+		for(Card card : hand) {
+			penaltyPoints += card.getPoints();
+		}
+		return penaltyPoints;
 	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {

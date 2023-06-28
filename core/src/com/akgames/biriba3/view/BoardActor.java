@@ -3,6 +3,7 @@ package com.akgames.biriba3.view;
 import com.akgames.biriba3.Utils.Utils;
 import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.controller.GameOptions;
+import com.akgames.biriba3.controller.Match;
 import com.akgames.biriba3.model.Board;
 import com.akgames.biriba3.ui.TeamsTrites;
 import com.badlogic.gdx.Gdx;
@@ -29,7 +30,7 @@ public class BoardActor extends Table implements PropertyChangeListener {
 	private final List<TeamsTrites> groupTrites;
 	
 	public BoardActor(Board board) {
-		this.gameLogic = GameController.getInstance();
+		this.gameLogic = Match.getController();
 		this.groupTrites = new ArrayList<>(gameLogic.getNumOfTeams());
 		this.deckActor = new DeckActor(board.getDeck());
 		this.discardsPileActor = new DiscardsPileActor();

@@ -1,8 +1,11 @@
 package com.akgames.biriba3.ui;
 
 import com.akgames.biriba3.Biriba3;
-import com.akgames.biriba3.events.StartGameEvent;
+import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.controller.GameOptions;
+import com.akgames.biriba3.controller.Match;
+import com.akgames.biriba3.events.DealEvent;
+import com.akgames.biriba3.events.StartGameEvent;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -17,17 +20,16 @@ import static com.akgames.biriba3.controller.GameOptions.BG_COLOR;
 /**
  * Responsible for rendering the game graphics.
  */
-public class GameScreen extends ScreenAdapter {
+public class ScreenGame extends ScreenAdapter {
 	private final Biriba3 game;
 	private final Skin skin = GameOptions.SKIN;
 	;
 	private final TextButton startBtn;
 	private Stage stage;
+	private boolean disposed = false;
 	
-	
-	public GameScreen(final Biriba3 game) {
+	public ScreenGame(final Biriba3 game) {
 		this.game = game;
-		
 		startBtn = new TextButton("Start Game", skin);
 		startBtn.addListener(new handleClickStartGameBtn());
 		startBtn.setColor(BG_COLOR);
@@ -49,6 +51,8 @@ public class GameScreen extends ScreenAdapter {
 	
 	@Override
 	public void show() {
+		if(disposed) return;
+		System.out.println("SHOW SCREEN GAME ");
 		// Create the stage
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
@@ -74,31 +78,17 @@ public class GameScreen extends ScreenAdapter {
 	}
 	
 	@Override
-	public void pause() {
-	
-	}
-	
-	@Override
-	public void resume() {
-	
-	}
-	
-	@Override
-	public void hide() {
-	
-	}
-	
-	@Override
 	public void dispose() {
-		skin.dispose();
+		this.disposed = true;
+		stage.clear();
 		stage.dispose();
-		game.dispose();
 	}
 	
 	private class handleClickStartGameBtn extends ChangeListener {
 		@Override
 		public void changed(ChangeEvent event, Actor actor) {
-			game.getGameLogic().handleAction(new StartGameEvent());
+			// Deal Cards
+			Match.getController().handleAction(new DealEvent());
 			actor.setVisible(false);
 		}
 	}

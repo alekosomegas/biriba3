@@ -1,5 +1,6 @@
 package com.akgames.biriba3.view;
 
+import com.akgames.biriba3.controller.Match;
 import com.akgames.biriba3.events.PickFromDeckEvent;
 import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.controller.GameOptions;
@@ -22,7 +23,7 @@ public class DeckActor extends Actor {
 	
 	
 	public DeckActor(Deck deck) {
-		this.gameLogic = GameController.getInstance();
+		this.gameLogic = Match.getController();
 		this.width = GameOptions.CARD_SIZE[1];
 		this.height = GameOptions.CARD_SIZE[0];
 		// Create the image of the back of a card

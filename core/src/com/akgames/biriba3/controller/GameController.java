@@ -1,12 +1,13 @@
 package com.akgames.biriba3.controller;
 
+import com.akgames.biriba3.Biriba3;
+import com.akgames.biriba3.events.EndTurnEvent;
 import com.akgames.biriba3.events.GameEvent;
 import com.akgames.biriba3.events.GameOverEvent;
 import com.akgames.biriba3.model.Board;
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.model.Player;
-import com.akgames.biriba3.ui.GameScreen;
-import com.akgames.biriba3.view.PlayerHandActor;
+import com.akgames.biriba3.ui.ScreenGame;
 import com.badlogic.gdx.Gdx;
 
 import java.beans.PropertyChangeEvent;
@@ -24,44 +25,50 @@ import static com.akgames.biriba3.controller.Turn.TurnPhases.BIRIBAKI_PLAY;
  */
 public class GameController implements PropertyChangeListener {
 	private static GameController instance;
-	public GameOptions gameOptions;
 	public int currentPlayerIndex;
 	private List<GameEvent> playerActionsQueue;
 	private List<Player> players;
 	private Board board;
-	private GameScreen gameScreen;
+	private ScreenGame gameScreen;
 	private PropertyChangeSupport support;
 	private boolean gameOver;
 	private int numOfTeams;
-	private PlayerHandActor mainPlayerHandActor;
 	private List<Card> selectedCards;
 	private boolean currentPlayerHasThrownCard;
+	private int kozi;
+	private Biriba3 game;
 	
 	// players created by the gameController / setup screen
-	private GameController() {
-		this.gameOptions = new GameOptions(this);
+	public GameController(Biriba3 game) {
+		this.game = game;
+		this.gameScreen = game.getGameScreen();
 		this.playerActionsQueue = new ArrayList<>();
 		this.currentPlayerIndex = 0;
 		this.gameOver = false;
 		this.selectedCards = new ArrayList<>();
 		this.currentPlayerHasThrownCard = false;
 		this.support = new PropertyChangeSupport(this);
-		
+		this.kozi = -1;
 	}
 	
-	public static GameController getInstance() {
-		if(instance == null) {
-			instance = new GameController();
-		}
-		return instance;
+	public boolean isGameOver() {
+		return gameOver;
 	}
 	
-	public static GameController createNewGame() {
-		instance = new GameController();
-		return instance;
+	public void setGameOver() {
+		this.gameOver = true;
 	}
 	
-	public void setGameScreen(GameScreen gameScreen) {
+	public int getKozi() {
+		return kozi;
+	}
+	
+	public void setKozi(int kozi) {
+		if (kozi != -1) return;
+		this.kozi = kozi;
+	}
+	
+	public void setGameScreen(ScreenGame gameScreen) {
 		this.gameScreen = gameScreen;
 	}
 	
@@ -75,6 +82,7 @@ public class GameController implements PropertyChangeListener {
 		// Add this as listener for each player. Listens for empty hand
 		for(Player player : players) {
 			player.addPropertyChangeListener(this);
+			player.addController(this);
 		}
 		this.board = new Board(numOfTeams);
 		board.getDeck().addPropertyChangeListener(this);
@@ -108,14 +116,6 @@ public class GameController implements PropertyChangeListener {
 		currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
 	}
 	
-	public PlayerHandActor getMainPlayerHandActor() {
-		return mainPlayerHandActor;
-	}
-	
-	public void setMainPlayerHandActor(PlayerHandActor mainPlayerHandActor) {
-		this.mainPlayerHandActor = mainPlayerHandActor;
-	}
-	
 	public void refreshUi() {
 		gameScreen.show();
 	}
@@ -140,7 +140,7 @@ public class GameController implements PropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(Objects.equals(evt.getPropertyName(), "Empty Hand")) {
 			if(getCurrentPlayer().hasTakenBiribaki()) {
-				handleAction(new GameOverEvent());
+				gameOver = true;
 				return;
 			}
 			if(currentPlayerHasThrownCard) {
@@ -151,10 +151,9 @@ public class GameController implements PropertyChangeListener {
 		}
 		
 		// End the game if only 2 cards left in deck
-		// TODO: after the current turn finishes
 		if(Objects.equals(evt.getPropertyName(), "Deck Size Changed")) {
 			if(Objects.equals(evt.getNewValue(), 2)) {
-				handleAction(new GameOverEvent());
+				gameOver = true;
 			}
 		}
 	}
@@ -171,10 +170,17 @@ public class GameController implements PropertyChangeListener {
 		Gdx.app.log(this.getClass().getName(), "\n\tCurrent Player: " + getCurrentPlayer().getName() + "\n\tTurn Phase: " + Turn.CurrentPhase() + " \n\tAction: " + gameEvent.getClass().getName());
 		if(!gameEvent.allowed()) return;
 		Gdx.app.debug(getClass().getName(), "Action allowed, entering execution...");
+
+		if (gameOver && gameEvent instanceof EndTurnEvent) {
+			new GameOverEvent().execute();
+			game.showGameOverScreen();
+		}
+	
 		playerActionsQueue.add(gameEvent);
 		gameEvent.execute();
 		// refresh screen
 		gameScreen.show();
+		// allow last action
 	}
 	
 	public void undo() {

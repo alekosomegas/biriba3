@@ -2,6 +2,7 @@ package com.akgames.biriba3.ui;
 
 import com.akgames.biriba3.Biriba3;
 import com.akgames.biriba3.Utils.Utils;
+import com.akgames.biriba3.controller.Match;
 import com.akgames.biriba3.events.AddCardToTritiEvent;
 import com.akgames.biriba3.events.CreateNewTritiEvent;
 import com.akgames.biriba3.events.EndTurnEvent;
@@ -11,7 +12,6 @@ import com.akgames.biriba3.controller.GameOptions;
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.view.BoardActor;
 import com.akgames.biriba3.view.CardActor;
-import com.akgames.biriba3.view.PlayerHandActor;
 import com.akgames.biriba3.view.TritiActor;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -30,16 +30,15 @@ public class GameUI extends Table {
 	
 	private final GameController gameController;
 	private final BoardActor boardActor;
-	private final PlayerHandActor mainPlayerHandActor;
+	private final PlayerBox mainPlayerHandActor;
 	private final Biriba3 game;
 	
 	
 	public GameUI(final Biriba3 game) {
-		this.gameController = GameController.getInstance();
+		this.gameController = Match.getController();
 		this.game = game;
 		this.boardActor = new BoardActor(gameController.getBoard());
-		this.mainPlayerHandActor = new PlayerHandActor(gameController.getMainPlayer());
-		gameController.setMainPlayerHandActor(mainPlayerHandActor);
+		this.mainPlayerHandActor = new PlayerBox(gameController.getMainPlayer());
 		// Place UI elements
 		// create table for bottom row (main player and controls)
 		BottomRowTable bottomRowTable = new BottomRowTable();
@@ -90,7 +89,7 @@ public class GameUI extends Table {
 	
 	private void setDragAndDrop(final DragAndDrop dragAndDrop) {
 		// Drag and drop for each card in main player's hand
-		for(final CardActor cardActor : mainPlayerHandActor.getHand()) {
+		for(final CardActor cardActor : mainPlayerHandActor.getPlayerHandActor().getHand()) {
 			dragAndDrop.addSource(new DragAndDrop.Source(cardActor) {
 				@Override
 				public DragAndDrop.Payload dragStart(InputEvent event, float x, float y, int pointer) {
@@ -122,7 +121,7 @@ public class GameUI extends Table {
 				public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
 					CardActor cardActor = (CardActor) payload.getDragActor();
 					Card card = cardActor.getCard();
-					GameController.getInstance().handleAction(new ThrowCardToDiscardsEvent(card));
+					Match.getController().handleAction(new ThrowCardToDiscardsEvent(card));
 				}
 			});
 			// Can be dropped in a Triti that belongs to the players team

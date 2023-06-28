@@ -1,8 +1,10 @@
 package com.akgames.biriba3.model;
 
 import com.akgames.biriba3.Utils.CheckTriti;
-import com.akgames.biriba3.controller.GameController;
+import com.akgames.biriba3.controller.Match;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,17 +43,68 @@ import java.util.List;
  * </ul>
  */
 public class Triti {
-	private final int team;
+	private final Team team;
+	private final PropertyChangeSupport support;
+	public boolean isClean;
+	public boolean isComplete;
+	public boolean isFull;
+	public boolean isKozi;
 	private ArrayList<Card> cards;
 	private ArrayList<Card> tempTritiCards;
 	private int suit;
+	private int score;
 	
 	// The constructor is private so a triti can only be created from a static context after being validated
-	private Triti(ArrayList<Card> cards, Characteristics characteristics) {
+	private Triti(ArrayList<Card> cards) {
+		this.support = new PropertyChangeSupport(this);
 		this.cards = cards;
 		// team number starts at 1
-		this.team = GameController.getInstance().getCurrentPlayer().getTeamNumber();
+		this.team = Match.getController().getCurrentPlayer().getTeam();
 		this.suit = cards.get(0).getSuit();
+		this.isClean = checkIfContainsJoker();
+		this.isComplete = cards.size() > 6;
+		this.isFull = cards.size() == 13;
+		this.isKozi = Match.getController().getKozi() == suit;
+		calculateScore();
+		team.addTriti(this);
+		team.calculateScore();
+	}
+	
+	/** Check initial value of each card against its current value, to see if triti contains a joker, ignore ace. */
+	private boolean checkIfContainsJoker() {
+		for(Card card : getCards()) {
+			if(card.getRank() == 1 || card.getRank() == 14) continue;
+			if(card.getInitialValue() != card.getValue()) return false;
+		}
+		return true;
+	}
+	
+	public void calculateScore() {
+		score = 0;
+		for(Card card : getCards()) {
+			score += card.getPoints();
+		}
+		// more than 6 cards
+		if(cards.size() > 6) {
+			score += 100;
+			if(checkIfContainsJoker()) score += 200;
+			if(isKozi) score += 200;
+			// 13 cards
+			if(cards.size() == 13) {
+				score += 200;
+				// 1000 points
+				if(checkIfContainsJoker() && isKozi) score += 300;
+			}
+		}
+	}
+	
+	public ArrayList<Card> getCards() {
+		return cards;
+	}
+	
+	// Only for undo
+	public void setCards(ArrayList<Card> cards) {
+		this.cards = cards;
 	}
 	
 	// Validates the list of cards and if they can form a triti creates one
@@ -59,8 +112,8 @@ public class Triti {
 	public static Triti createTriti(List<Card> cards) {
 		if(canCreateValidTriti(cards)) {
 			cards.sort(Collections.<Card>reverseOrder());
-			// TODO: checkAce(cards); needed here?
-			return new Triti((ArrayList<Card>) cards, Characteristics.getCharacteristics());
+			// TODO: checkAce(cards); needed here?1
+			return new Triti((ArrayList<Card>) cards);
 		}
 		return null;
 	}
@@ -130,6 +183,18 @@ public class Triti {
 		return false;
 	}
 	
+	public int getScore() {
+		return score;
+	}
+	
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		support.addPropertyChangeListener(listener);
+	}
+	
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		support.removePropertyChangeListener(listener);
+	}
+	
 	// Used for testing
 	public ArrayList<Integer> getCardsAsValues() {
 		ArrayList<Integer> result = new ArrayList<>(cards.size());
@@ -144,12 +209,13 @@ public class Triti {
 		// The temporary cards became the cards of the triti
 		cards = tempTritiCards;
 		cards.sort(Collections.<Card>reverseOrder());
-		for (Card tempCard : cards) {
+		for(Card tempCard : cards) {
 			tempCard.setShowFace(true);
 			tempCard.setSelected(false);
 			tempCard.setClickable(false);
 		}
-		
+		calculateScore();
+		team.calculateScore();
 		return true;
 	}
 	
@@ -168,15 +234,7 @@ public class Triti {
 		return canCreateValidTriti(tempTritiCards);
 	}
 	
-	public ArrayList<Card> getCards() {
-		return cards;
-	}
-	// Only for undo
-	public void setCards(ArrayList<Card> cards) {
-		this.cards = cards;
-	}
-	
-	public int getTeam() {
+	public Team getTeam() {
 		return team;
 	}
 	

@@ -1,6 +1,7 @@
 package com.akgames.biriba3.view;
 
 import com.akgames.biriba3.controller.GameController;
+import com.akgames.biriba3.controller.Match;
 import com.akgames.biriba3.model.Card;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -38,9 +39,9 @@ public class CardActor extends Actor {
 			public void clicked(InputEvent event, float x, float y) {
 				if(card.isClickable()) {
 					if(card.isSelected()) {
-						GameController.getInstance().removeFromSelectedCards(card);
+						Match.getController().removeFromSelectedCards(card);
 					} else {
-						GameController.getInstance().addToSelectedCards(card);
+						Match.getController().addToSelectedCards(card);
 					}
 					card.setSelected(!card.isSelected());
 				}

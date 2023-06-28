@@ -29,10 +29,9 @@ public class Turn {
 		current = TurnPhases.PICK;
 	}
 	
-	public static Turn getInstance() {
-		if(instance == null) {
-			instance = new Turn();
-		}
+	public static Turn getNewInstance() {
+		instance = new Turn();
+
 		current = TurnPhases.PICK;
 		return instance;
 	}

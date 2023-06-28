@@ -2,27 +2,39 @@ package com.akgames.biriba3;
 
 import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.controller.GameOptions;
-import com.akgames.biriba3.ui.GameScreen;
-import com.akgames.biriba3.ui.MainMenuScreen;
+import com.akgames.biriba3.controller.Match;
+import com.akgames.biriba3.ui.ScreenGame;
+import com.akgames.biriba3.ui.ScreenGameOver;
+import com.akgames.biriba3.ui.ScreenMainMenu;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+// TODO: wrong player turn in new game
+// TODO: has biribaki for team, not player
+// TODO: player score to be round score for team, not total score
 
 public class Biriba3 extends Game {
-	private MainMenuScreen mainMenuScreen;
-	private GameScreen gameScreen;
-	private GameController gameLogic;
-	
+	private ScreenMainMenu mainMenuScreen;
+	private ScreenGame gameScreen;
+	private ScreenGameOver gameOverScreen;
+	private GameController gameController;
+	private Match match;
 	public Biriba3() {
 		// instantiates all the game components
 		// gameLogic -> Board -> Deck -> Cards
-		gameLogic = GameController.getInstance();
+//		gameController = Match.getController();
+		GameOptions gameOptions = new GameOptions();
+		this.match = new Match(this, gameOptions);
+		gameController = Match.getController();
 	}
 	
 	public void createNewGame() {
-		gameLogic = GameController.createNewGame();
+//		gameController = GameController.createNewGame();
 		create();
 		setScreen(mainMenuScreen);
 	}
@@ -31,9 +43,9 @@ public class Biriba3 extends Game {
 	public void create() {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		GameOptions.SKIN = new Skin(Gdx.files.internal("skins/default/skin/uiskin.json"));
-		mainMenuScreen = new MainMenuScreen(this);
-		gameScreen = new GameScreen(this);
-		gameLogic.setGameScreen(gameScreen);
+		mainMenuScreen = new ScreenMainMenu(this);
+		gameScreen = new ScreenGame(this);
+		gameOverScreen = new ScreenGameOver(this);
 		setScreen(mainMenuScreen);
 	}
 	
@@ -46,22 +58,21 @@ public class Biriba3 extends Game {
 	@Override
 	public void dispose() {
 		// Dispose of resources when the game exits
-		mainMenuScreen.dispose();
-		gameScreen.dispose();
+
 	}
 	
-	public MainMenuScreen getMainMenuScreen() {
-		return mainMenuScreen;
-	}
-	
-	public GameScreen getGameScreen() {
+	public ScreenGame getGameScreen() {
 		return gameScreen;
 	}
 	
-	// TODO: no need
-	public GameController getGameLogic() {
-		return gameLogic;
+	public void showGameScreen() {
+		gameScreen = new ScreenGame(this);
+		gameController.setGameScreen(gameScreen);
+		setScreen(gameScreen);
 	}
 	
-	
+	public void showGameOverScreen() {
+		gameScreen.dispose();
+		setScreen(gameOverScreen);
+	}
 }

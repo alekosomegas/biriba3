@@ -2,6 +2,7 @@ package com.akgames.biriba3.view;
 
 import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.controller.GameOptions;
+import com.akgames.biriba3.controller.Match;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -12,7 +13,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Objects;
 
 public class InputPlayerRow extends Table implements PropertyChangeListener {
-	private final GameOptions gameOptions = GameController.getInstance().gameOptions;
+	private final GameOptions gameOptions = Match.getGameOptions();
 	private final Skin skin = GameOptions.SKIN;
 	private final int index;
 	private boolean isActive;

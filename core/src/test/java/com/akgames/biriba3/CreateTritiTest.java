@@ -3,6 +3,7 @@ package com.akgames.biriba3;
 
 import com.akgames.biriba3.controller.GameController;
 import com.akgames.biriba3.controller.GameOptions;
+import com.akgames.biriba3.controller.Match;
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.model.Triti;
 import org.junit.jupiter.api.Assertions;
@@ -12,10 +13,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class CreateTritiTest {
-    GameController gameLogic = GameController.getInstance();
-    GameOptions gameOptions = gameLogic.gameOptions;
-    boolean startGame = gameOptions.createPlayers();
-
+    Biriba3 game = new Biriba3();
+    boolean startGame = Match.createNewGame();
+    
     Card joker = new Card(-1);
     Card diamondThree = new Card(2);
     Card diamondFour = new Card(3);

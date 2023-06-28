@@ -1,6 +1,7 @@
 package com.akgames.biriba3.view;
 
 import com.akgames.biriba3.controller.GameController;
+import com.akgames.biriba3.controller.Match;
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.model.Player;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
@@ -27,7 +28,7 @@ public class PlayerHandActor extends HorizontalGroup {
 		
 		for(Card card : player.getHand()) {
 			// main player
-			if(GameController.getInstance().getPlayers().indexOf(player) == 0) {
+			if(Match.getController().getPlayers().indexOf(player) == 0) {
 				w = CARD_SIZE_LG[0];
 				h = CARD_SIZE_LG[1];
 				d = w * -0.8f;

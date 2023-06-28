@@ -44,10 +44,10 @@ public class Board {
 	public void addAllToDiscardPile(List<Card> cards) {discardPile.addAll(cards);}
 	public void removeFromDiscardedPile(Card card) {discardPile.remove(card);}
 	public void addTriti(Triti triti) {
-		trites.get(triti.getTeam()).add(triti);
+		trites.get(triti.getTeam().getIndex()).add(triti);
 	}
 	public void removerTriti(Triti triti) {
-		trites.get(triti.getTeam()).remove(triti);
+		trites.get(triti.getTeam().getIndex()).remove(triti);
 	}
 	
 	public List<Triti> getTrites(int team) {

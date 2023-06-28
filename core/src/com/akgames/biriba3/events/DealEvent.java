@@ -1,6 +1,7 @@
 package com.akgames.biriba3.events;
 
 import com.akgames.biriba3.controller.GameController;
+import com.akgames.biriba3.controller.Match;
 import com.akgames.biriba3.model.Board;
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.model.Deck;
@@ -17,7 +18,7 @@ public class DealEvent implements GameEvent {
 	private final List<Player> players;
 	
 	public DealEvent() {
-		GameController gameLogic = GameController.getInstance();
+		GameController gameLogic = Match.getController();
 		this.board = gameLogic.getBoard();
 		this.deck = gameLogic.getBoard().getDeck();
 		this.players = gameLogic.getPlayers();
@@ -44,7 +45,10 @@ public class DealEvent implements GameEvent {
 		}
 		
 		board.createBiribakia(cards1, cards2);
-		board.addToDiscardPile(deck.getTopCard().setShowFace(true));
+		Card koziCard = deck.getTopCard();
+		int kozi = koziCard.getSuit();
+		GAME_CONTROLLER.setKozi(kozi);
+		board.addToDiscardPile(koziCard.setShowFace(true));
 	}
 	
 	@Override
