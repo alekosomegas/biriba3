@@ -1,5 +1,7 @@
 package com.akgames.biriba3.events;
 
+import com.akgames.biriba3.controller.GameController;
+import com.akgames.biriba3.controller.Match;
 import com.akgames.biriba3.controller.Turn;
 import com.akgames.biriba3.model.Board;
 import com.akgames.biriba3.model.Card;
@@ -20,12 +22,15 @@ public class CreateNewTritiEvent implements GameEvent {
 	private final Board board;
 	private final boolean hasPickedFromDiscards;
 	private Triti triti;
-	
+	private GameController controller;
 	// Used by GameUI
 	public CreateNewTritiEvent() {
-		this.selectedCards = GAME_CONTROLLER.getSelectedCards();
-		this.currentPLayer = GAME_CONTROLLER.getCurrentPlayer();
-		this.board = GAME_CONTROLLER.getBoard();
+		controller = Match.getController();
+		System.out.println("ΝΕ΅ΤΡΙΤΙ ΕVENT 111111111111\n . ");
+		
+		this.selectedCards = controller.getSelectedCards();
+		this.currentPLayer = controller.getCurrentPlayer();
+		this.board = controller.getBoard();
 		this.hasPickedFromDiscards = Turn.CurrentPhase() == TRITI;
 	}
 	
@@ -37,6 +42,11 @@ public class CreateNewTritiEvent implements GameEvent {
 	
 	@Override
 	public void execute() {
+			System.out.println("ΝΕ΅ΤΡΙΤΙ ΕVENT \n . ");
+		for(Card card : selectedCards) {
+			System.out.println(card + " . ");
+			
+		}
 		triti = Triti.createTriti(new ArrayList<>(selectedCards));
 		if(triti != null) {
 			for(Card card : selectedCards) {
@@ -65,9 +75,10 @@ public class CreateNewTritiEvent implements GameEvent {
 			// reset values
 			if(card.isJoker) card.setValueAndRankAndSuit(-1, -1);
 			if(card.getRank() == 14) card.setValueAndRankAndSuit(1, card.getSuit());
-			if(card.getRank() == 2) card.setValueAndRankAndSuit(2, card.getSuit());
+			if(card.getInitialValue() % 13 == 1) card.setValueAndRankAndSuit(2, card.getSuit());
 		}
 		currentPLayer.addToHand(triti.getCards());
+		selectedCards.clear();
 		selectedCards.addAll(triti.getCards());
 		board.removerTriti(triti);
 		if(hasPickedFromDiscards) Turn.setCurrentPhaseTo(TRITI);

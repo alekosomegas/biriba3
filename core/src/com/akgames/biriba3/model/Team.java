@@ -44,6 +44,7 @@ public class Team {
 	public void saveRoundsScore() {
 		roundsScores.add(roundsScore);
 		totalScore += roundsScore;
+		roundsScore = 0;
 	}
 	
 	public int getRoundsScore() {
@@ -52,6 +53,14 @@ public class Team {
 	
 	public int getIndex() {
 		return index;
+	}
+	
+	public void setHasTakenBiribaki() {
+		this.hasTakenBiribaki = true;
+	}
+	
+	public boolean hasTakenBiribaki() {
+		return hasTakenBiribaki;
 	}
 	
 	public void addTriti(Triti triti) {

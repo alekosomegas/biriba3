@@ -31,8 +31,6 @@ public class Turn {
 	
 	public static Turn getNewInstance() {
 		instance = new Turn();
-
-		current = TurnPhases.PICK;
 		return instance;
 	}
 	

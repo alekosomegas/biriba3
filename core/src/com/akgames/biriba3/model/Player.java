@@ -21,7 +21,6 @@ public class Player {
 	protected GameController gameController;
 	private List<Card> hand;
 	private String name;
-	private boolean hasTakenBiribaki;
 	
 	public Player(String name, int teamNumber) {
 		this.hand = new ArrayList<>();
@@ -31,7 +30,6 @@ public class Player {
 		this.twos = new ArrayList<>();
 		this.name = name;
 		this.teamNumber = teamNumber;
-		this.hasTakenBiribaki = false;
 		this.support = new PropertyChangeSupport(this);
 	}
 	
@@ -133,14 +131,6 @@ public class Player {
 	
 	public int getTeamNumber() {
 		return teamNumber;
-	}
-	
-	public void setHasTakenBiribaki() {
-		this.hasTakenBiribaki = true;
-	}
-	
-	public boolean hasTakenBiribaki() {
-		return hasTakenBiribaki;
 	}
 	
 	public void act() {

@@ -32,7 +32,6 @@ public class Match {
 	
 	public static boolean createNewGame() {
 		Match.controller = new GameController(game);
-		// TODO has taken biribaki must be for team
 		controller.setUpGame(players);
 		numRounds++;
 		return true;

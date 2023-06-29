@@ -1,5 +1,7 @@
 package com.akgames.biriba3.events;
 
+import com.akgames.biriba3.controller.GameController;
+import com.akgames.biriba3.controller.Match;
 import com.akgames.biriba3.controller.Turn;
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.model.Triti;
@@ -15,8 +17,10 @@ public class AddCardToTritiEvent implements GameEvent {
 	private final Triti triti;
 	private final ArrayList<Card> tritiCards;
 	private final boolean hasPickedFromDiscards;
+	private GameController controller;
 	
 	public AddCardToTritiEvent(Card card, Triti triti) {
+		controller = Match.getController();
 		this.card = card;
 		this.triti = triti;
 		this.tritiCards = triti.getCards();
@@ -27,7 +31,7 @@ public class AddCardToTritiEvent implements GameEvent {
 	public void execute() {
 		boolean success = triti.addCard(card);
 		if(success) {
-			GAME_CONTROLLER.getCurrentPlayer().removeCard(card);
+			controller.getCurrentPlayer().removeCard(card);
 			// no need to do anything if in discard phase
 			if(hasPickedFromDiscards) {
 				// only if one of new cards involved
@@ -38,8 +42,8 @@ public class AddCardToTritiEvent implements GameEvent {
 	
 	@Override
 	public boolean undo() {
-		GAME_CONTROLLER.getCurrentPlayer().addToHand(card);
-		if(GAME_CONTROLLER.getPlayers().indexOf(GAME_CONTROLLER.getCurrentPlayer()) != 0) {
+		controller.getCurrentPlayer().addToHand(card);
+		if(controller.getPlayers().indexOf(controller.getCurrentPlayer()) != 0) {
 			card.setShowFace(false);
 		} else {
 			card.setClickable(true);

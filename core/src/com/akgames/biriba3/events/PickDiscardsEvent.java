@@ -1,5 +1,7 @@
 package com.akgames.biriba3.events;
 
+import com.akgames.biriba3.controller.GameController;
+import com.akgames.biriba3.controller.Match;
 import com.akgames.biriba3.controller.Turn;
 import com.akgames.biriba3.model.Card;
 
@@ -10,10 +12,13 @@ import static com.akgames.biriba3.controller.Turn.TurnPhases.PICK;
 import static com.akgames.biriba3.controller.Turn.TurnPhases.TRITI;
 
 public class PickDiscardsEvent implements GameEvent {
-	private List<Card> discards;
+	private final List<Card> discards;
+	private GameController controller;
 	
 	public PickDiscardsEvent() {
-		this.discards = new ArrayList<>(GAME_CONTROLLER.getBoard().getDiscardPile());
+		controller = Match.getController();
+		this.discards = new ArrayList<>(controller.getBoard().getDiscardPile());
+		controller.discardsTemp = discards;
 	}
 	
 	@Override
@@ -21,9 +26,10 @@ public class PickDiscardsEvent implements GameEvent {
 		for(Card card : discards) {
 			card.setClickable(true);
 		}
-		GAME_CONTROLLER.getCurrentPlayer().addDiscardedCards(discards);
-		GAME_CONTROLLER.getBoard().getDiscardPile().clear();
-		GAME_CONTROLLER.setCurrentPlayerHasThrownCard(false);
+		controller.getCurrentPlayer().addDiscardedCards(discards);
+		controller.getBoard().getDiscardPile().clear();
+		controller.setCurrentPlayerHasThrownCard(false);
+		controller.checkForDiscards = true;
 		
 		Turn.setCurrentPhaseTo(TRITI);
 	}
@@ -34,9 +40,10 @@ public class PickDiscardsEvent implements GameEvent {
 			card.setShowFace(true);
 			card.setClickable(false);
 		}
-		GAME_CONTROLLER.getCurrentPlayer().removeCard(discards);
-		GAME_CONTROLLER.getBoard().addAllToDiscardPile(discards);
-		GAME_CONTROLLER.setCurrentPlayerHasThrownCard(true);
+		controller.getCurrentPlayer().removeCard(discards);
+		controller.getBoard().addAllToDiscardPile(discards);
+		controller.setCurrentPlayerHasThrownCard(true);
+		controller.checkForDiscards = false;
 		
 		Turn.setCurrentPhaseTo(PICK);
 		return true;

@@ -1,5 +1,7 @@
 package com.akgames.biriba3.events;
 
+import com.akgames.biriba3.controller.GameController;
+import com.akgames.biriba3.controller.Match;
 import com.akgames.biriba3.controller.Turn;
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.model.Player;
@@ -9,16 +11,22 @@ import java.util.List;
 import static com.akgames.biriba3.controller.Turn.TurnPhases.*;
 
 public class TakeBiribakiEvent implements GameEvent {
-	Player player = GAME_CONTROLLER.getCurrentPlayer();
+	private Player player ;
+	private GameController controller;
+	
+	public TakeBiribakiEvent() {
+		controller = Match.getController();
+		player  = controller.getCurrentPlayer();
+	}
 	
 	@Override
 	public void execute() {
 		// A player can only take one biribaki
-		if(player.hasTakenBiribaki()) return;
-		List<Card> biribaki = GAME_CONTROLLER.getBoard().getBiribaki();
+		if(player.getTeam().hasTakenBiribaki()) return;
+		List<Card> biribaki = controller.getBoard().getBiribaki();
 		player.addToHand(biribaki);
-		player.setHasTakenBiribaki();
-		if(GAME_CONTROLLER.getPlayers().indexOf(player) == 0) {
+		player.getTeam().setHasTakenBiribaki();
+		if(controller.getPlayers().indexOf(player) == 0) {
 			for(Card card : biribaki) {
 				card.setShowFace(true);
 				card.setClickable(true);

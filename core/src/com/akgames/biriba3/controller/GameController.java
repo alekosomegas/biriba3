@@ -7,6 +7,7 @@ import com.akgames.biriba3.events.GameOverEvent;
 import com.akgames.biriba3.model.Board;
 import com.akgames.biriba3.model.Card;
 import com.akgames.biriba3.model.Player;
+import com.akgames.biriba3.model.Triti;
 import com.akgames.biriba3.ui.ScreenGame;
 import com.badlogic.gdx.Gdx;
 
@@ -34,6 +35,10 @@ public class GameController implements PropertyChangeListener {
 	private boolean gameOver;
 	private int numOfTeams;
 	private List<Card> selectedCards;
+	public List<Card> discardsTemp;
+	// true from pickDiscardsEvent, false for PickDeckEvent
+	public boolean checkForDiscards;
+	
 	private boolean currentPlayerHasThrownCard;
 	private int kozi;
 	private Biriba3 game;
@@ -125,6 +130,7 @@ public class GameController implements PropertyChangeListener {
 	}
 	
 	public void addToSelectedCards(Card selectedCard) {
+		System.out.println("ADD t0 se;eceted " + selectedCard);
 		this.selectedCards.add(selectedCard);
 	}
 	
@@ -139,7 +145,7 @@ public class GameController implements PropertyChangeListener {
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(Objects.equals(evt.getPropertyName(), "Empty Hand")) {
-			if(getCurrentPlayer().hasTakenBiribaki()) {
+			if(getCurrentPlayer().getTeam().hasTakenBiribaki()) {
 				gameOver = true;
 				return;
 			}
@@ -193,5 +199,19 @@ public class GameController implements PropertyChangeListener {
 		}
 		// refresh screen
 		gameScreen.show();
+	}
+	
+	
+	public boolean hasUsedDiscardedCard() {
+		for (Card card : discardsTemp) {
+			for(int i = 0; i < numOfTeams; i++) {
+				for(Triti triti : board.getTrites(i)) {
+					if (triti.getCards().contains(card)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 }

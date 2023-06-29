@@ -14,9 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-// TODO: wrong player turn in new game
-// TODO: has biribaki for team, not player
-// TODO: player score to be round score for team, not total score
+// TODO: AI allowed to add card to triti that already exists(Ace on top)
 
 public class Biriba3 extends Game {
 	private ScreenMainMenu mainMenuScreen;

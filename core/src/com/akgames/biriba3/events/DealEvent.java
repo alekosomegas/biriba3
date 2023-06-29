@@ -16,12 +16,13 @@ public class DealEvent implements GameEvent {
 	private final Board board;
 	private final Deck deck;
 	private final List<Player> players;
+	private GameController controller;
 	
 	public DealEvent() {
-		GameController gameLogic = Match.getController();
-		this.board = gameLogic.getBoard();
-		this.deck = gameLogic.getBoard().getDeck();
-		this.players = gameLogic.getPlayers();
+		controller = Match.getController();
+		this.board = controller.getBoard();
+		this.deck = controller.getBoard().getDeck();
+		this.players = controller.getPlayers();
 	}
 	
 	@Override
@@ -47,7 +48,7 @@ public class DealEvent implements GameEvent {
 		board.createBiribakia(cards1, cards2);
 		Card koziCard = deck.getTopCard();
 		int kozi = koziCard.getSuit();
-		GAME_CONTROLLER.setKozi(kozi);
+		controller.setKozi(kozi);
 		board.addToDiscardPile(koziCard.setShowFace(true));
 	}
 	
