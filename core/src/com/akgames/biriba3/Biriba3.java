@@ -15,6 +15,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 // TODO: AI allowed to add card to triti that already exists(Ace on top)
+// TODO: multiple players broken
+// TODO: Exit match
+// TODO: take biribaki only if has complete triti
+// TODO: reset has taken biribaki
+// TODO: show round score not total
+// TODO: BIRBAKI_PLAY insted of BRIRIBAKI_END
+// TODO: when pick from discards end added to triti and then added another card, cannot throw card, ok if undo and then only throw last card
 
 public class Biriba3 extends Game {
 	private ScreenMainMenu mainMenuScreen;
