@@ -27,7 +27,7 @@ public class CardActor extends Actor {
 		this.width = width;
 		this.height = height;
 		// load image of card or its back
-		Texture texture = new Texture(Gdx.files.internal("assets/cardImgs/" + (card.isShowFace() ? card.getImageUrl() : "back.png")));
+		Texture texture = new Texture(Gdx.files.internal("cardImgs/" + (card.isShowFace() ? card.getImageUrl() : "back.png")));
 		this.cardImage = new TextureRegion(texture);
 		// TODO: update when card is moved(selected) so it can be clicked
 		// Set clickable bounds

@@ -19,9 +19,9 @@ public class BiribakiaActor extends Stack {
 	public BiribakiaActor() {
 		int numBiribakia = Match.getController().getBoard().getNumBiribakia();
 		// Load images
-		Texture texture = new Texture(Gdx.files.internal("assets/cardImgs/back90.png"));
+		Texture texture = new Texture(Gdx.files.internal("cardImgs/back90.png"));
 		Image cardImage1 = new Image(new TextureRegion(texture));
-		Image cardImage2 = new Image(new TextureRegion(new Texture(Gdx.files.internal("assets/cardImgs/biribaki.png"))));
+		Image cardImage2 = new Image(new TextureRegion(new Texture(Gdx.files.internal("cardImgs/biribaki.png"))));
 		// decide which image should be displayed. Display nothing if both are taken
 		if(numBiribakia == 2) {
 			addActor(cardImage2);

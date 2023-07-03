@@ -27,7 +27,7 @@ public class DeckActor extends Actor {
 		this.width = GameOptions.CARD_SIZE[1];
 		this.height = GameOptions.CARD_SIZE[0];
 		// Create the image of the back of a card
-		Texture texture = new Texture(Gdx.files.internal("assets/cardImgs/back90.png"));
+		Texture texture = new Texture(Gdx.files.internal("cardImgs/back90.png"));
 		cardImage = new TextureRegion(texture);
 		// Set the clickable bounds
 		this.setBounds(getX(), getY(), width, height);

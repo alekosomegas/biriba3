@@ -86,11 +86,11 @@ public class ScreenMainMenu extends ScreenAdapter {
 		@Override
 		public void clicked(InputEvent event, float x, float y) {
 			int pointsToWin = 2000;
-			try {
-				pointsToWin = Integer.parseInt(pointsToWinTF.getMessageText());
-			} catch(NumberFormatException e) {
-				e.printStackTrace();
-			}
+//			try {
+//				pointsToWin = Integer.parseInt(pointsToWinTF.getMessageText());
+//			} catch(NumberFormatException e) {
+//				e.printStackTrace();
+//			}
 			// gameOptions creates the players and sends them to gameLogic
 			// TODO: fix this
 			GameOptions.pointsToWin = pointsToWin;

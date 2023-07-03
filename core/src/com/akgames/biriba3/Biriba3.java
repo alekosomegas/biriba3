@@ -14,6 +14,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
 // TODO: AI allowed to add card to triti that already exists(Ace on top)
 // TODO: multiple players broken
 // TODO: Exit match
@@ -71,9 +77,9 @@ public class Biriba3 extends Game {
 	}
 	
 	public void showGameScreen() {
-		gameScreen = new ScreenGame(this);
-		gameController.setGameScreen(gameScreen);
-		setScreen(gameScreen);
+			gameScreen = new ScreenGame(this);
+			gameController.setGameScreen(gameScreen);
+			setScreen(gameScreen);
 	}
 	
 	public void showGameOverScreen() {
